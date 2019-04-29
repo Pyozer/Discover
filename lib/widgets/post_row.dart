@@ -1,7 +1,11 @@
+import 'package:discover/screens/post_screen.dart';
 import 'package:discover/widgets/rounded_image.dart';
+import 'package:discover/widgets/user_image.dart';
 import 'package:flutter/material.dart';
 
 enum MenuPost { report }
+
+const img = "http://images.unsplash.com/photo-1555985202-12975b0235dc";
 
 class PostRow extends StatelessWidget {
   const PostRow({Key key}) : super(key: key);
@@ -10,7 +14,7 @@ class PostRow extends StatelessWidget {
     return PopupMenuButton<MenuPost>(
       icon: Icon(Icons.more_vert),
       onSelected: (MenuPost result) {
-        // TODO: report post
+        // TODO: Report post
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuPost>>[
             const PopupMenuItem<MenuPost>(
@@ -35,10 +39,9 @@ class PostRow extends StatelessWidget {
             child: IntrinsicHeight(
               child: Row(
                 children: [
-                  RoundedImage(
-                    imageUrl:
-                        "https://www.beachfitbondi.com.au/wp-content/uploads/2017/12/placeholder-profile.jpg",
-                    size: Size.square(50),
+                  UserImage(
+                    userId: "fdghj-dfgh-dfgh-fdgh",
+                    size: 50,
                   ),
                   const SizedBox(width: 16.0),
                   Expanded(
@@ -66,11 +69,17 @@ class PostRow extends StatelessWidget {
               ),
             ),
           ),
-          RoundedImage(
-            imageUrl:
-                "https://images.unsplash.com/photo-1469827160215-9d29e96e72f4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-            size: Size.fromHeight(250),
-            radius: 0.0,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => PostScreen()
+              ));
+            },
+            child: RoundedImage(
+              imageUrl: img,
+              size: Size.fromHeight(250),
+              radius: 0.0,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16.0, 16.0, 0.0),

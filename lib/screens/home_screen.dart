@@ -1,5 +1,5 @@
 import 'package:discover/widgets/main_post_list.dart';
-import 'package:discover/widgets/rounded_image.dart';
+import 'package:discover/widgets/user_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -42,11 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const SizedBox(height: 24.0),
             Center(
-              child: RoundedImage(
-                imageUrl:
-                    "https://www.beachfitbondi.com.au/wp-content/uploads/2017/12/placeholder-profile.jpg",
-                elevation: 2,
-                size: Size.square(150),
+              child: UserImage(
+                userId: "fgh-dfgh-fgh-fgh",
+                size: 125,
+                elevation: 2.0,
               ),
             ),
             const SizedBox(height: 16.0),
