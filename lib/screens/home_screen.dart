@@ -1,3 +1,6 @@
+import 'package:discover/widgets/main_post_list.dart';
+import 'package:discover/widgets/rounded_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,22 +11,105 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Discover"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit_location),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.sort),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          MainPostList(),
+          MainPostList(),
+          MainPostList(),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const SizedBox(height: 24.0),
+            Center(
+              child: RoundedImage(
+                imageUrl:
+                    "https://www.beachfitbondi.com.au/wp-content/uploads/2017/12/placeholder-profile.jpg",
+                elevation: 2,
+                size: Size.square(150),
+              ),
+            ),
+            const SizedBox(height: 16.0),
             Text(
-              'Hello World',
-              style: TextStyle(fontWeight: FontWeight.w500),
+              "FirstName LastName",
+              style: Theme.of(context).textTheme.subhead,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30.0),
+            ListTile(
+              title: Text("My Account"),
+              leading: Icon(Icons.person),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text("Search user"),
+              leading: Icon(Icons.search),
+              onTap: () {},
+            ),
+            const Divider(),
+            ListTile(
+              title: Text("About"),
+              leading: Icon(Icons.info_outline),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text("Introduction"),
+              leading: Icon(Icons.view_carousel),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text("Feedback"),
+              leading: Icon(Icons.feedback),
+              onTap: () {},
+            ),
+            const Divider(),
+            ListTile(
+              title: Text("Logout"),
+              leading: Icon(Icons.exit_to_app),
+              onTap: () {},
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (page) {
+          setState(() => _currentIndex = page);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            title: Text("All posts"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            title: Text("Friends posts"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            title: Text("Map"),
+          ),
+        ],
       ),
     );
   }
