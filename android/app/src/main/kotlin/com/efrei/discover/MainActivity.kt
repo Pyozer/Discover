@@ -1,4 +1,4 @@
-package com.efrei.discover.discover
+package com.efrei.discover
 
 import android.os.Bundle
 
