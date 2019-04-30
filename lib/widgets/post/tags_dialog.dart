@@ -38,26 +38,27 @@ class _TagsDialogState extends State<TagsDialog> {
               style: Theme.of(context).textTheme.title,
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 10),
-            itemCount: widget.tags.length,
-            itemBuilder: (_, i) {
-              final tag = widget.tags[i];
-              return CheckboxListTile(
-                onChanged: (checked) {
-                  setState(() {
-                    if (checked)
-                      _selectedTags.add(tag);
-                    else
-                      _selectedTags.remove(tag);
-                  });
-                },
-                value: _selectedTags.contains(tag),
-                title: Text(tag),
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 10),
+              itemCount: widget.tags.length,
+              itemBuilder: (_, i) {
+                final tag = widget.tags[i];
+                return CheckboxListTile(
+                  onChanged: (checked) {
+                    setState(() {
+                      if (checked)
+                        _selectedTags.add(tag);
+                      else
+                        _selectedTags.remove(tag);
+                    });
+                  },
+                  value: _selectedTags.contains(tag),
+                  title: Text(tag),
+                );
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 20, 12),
