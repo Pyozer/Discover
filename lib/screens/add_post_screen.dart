@@ -20,17 +20,43 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Add post"),
+      appBar: AppBar(title: Text("Add post")),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: screenSize.height / 3.5,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _image == null
+                    ? Image.network(
+                        "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(_image, fit: BoxFit.cover),
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: FloatingActionButton(
+                    heroTag: "AddCamera",
+                    child: Icon(Icons.add_a_photo),
+                    onPressed: getImage,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
-      body: Center(
-        child: _image == null ? Text('No image selected.') : Image.file(_image),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // TODO: Send post
+        },
+        icon: Icon(Icons.send),
+        label: Text("Add post"),
       ),
     );
   }
