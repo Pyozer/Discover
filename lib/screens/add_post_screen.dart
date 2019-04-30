@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:discover/widgets/post/tags_dialog.dart';
+import 'package:discover/widgets/ui/btn_colored.dart';
+import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -15,7 +17,7 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   File _image;
-  List<String> _tags = ["Cascade", "Monument", "Plage", "Nature"];
+  List<String> _tags = ["Cascade", "Monument", "Plage", "Nature", "Musée", "Bibliothèque", "Statue", "Lieu culte", "Mairie", "Château", "Ruine", "Boutique", "Restaurant"];
   List<String> _selectedTags = [];
 
   Future _openGalleryCamera() async {
@@ -65,59 +67,101 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(title: Text("Add post")),
-          body: ListView(
-            children: [
-              Container(
-                height: screenSize.height / 3.5,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    _image == null
-                        ? Image.network(
-                            "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(_image, fit: BoxFit.cover),
-                    Positioned(
-                      bottom: 16,
-                      right: 16,
-                      child: FloatingActionButton(
-                        heroTag: "AddCamera",
-                        child: Icon(Icons.add_a_photo),
-                        onPressed: _openGalleryCamera,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Add post"),
+        centerTitle: true,
+        actions: [
+          FlatButton(
+            textColor: Colors.white,
+            child: Text("PUBLISH"),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            onPressed: () {
+              // TODO: Send post
+            },
+          ),
+        ],
+      ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(color: Theme.of(context).primaryColor, height: 60),
+          ),
+          SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                CustomCard(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text("Description",
+                          style: Theme.of(context).textTheme.caption),
+                      TextField(
+                        maxLines: 7,
+                        minLines: 4,
+                        keyboardType: TextInputType.multiline,
+                        maxLength: 1000,
+                        maxLengthEnforced: false,
                       ),
-                    )
-                  ],
+                      const SizedBox(height: 10),
+                      Text("Additional informations",
+                          style: Theme.of(context).textTheme.caption),
+                      TextField(
+                        maxLines: 6,
+                        minLines: 2,
+                        keyboardType: TextInputType.multiline,
+                        maxLength: 500,
+                        maxLengthEnforced: false,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                height: 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: Colors.grey[300],
-                      width: 60,
-                      child: InkWell(
-                        onTap: _openTagDialog,
-                        child: Center(
-                          child: Icon(Icons.add),
-                        ),
-                      ),
+                CustomCard(
+                  padding: EdgeInsets.zero,
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  child: Container(
+                    height: screenSize.height / 3.5,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _image == null
+                            ? Image.network(
+                                "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(_image, fit: BoxFit.cover),
+                        Positioned(
+                          bottom: 16,
+                          right: 16,
+                          child: FloatingActionButton(
+                            heroTag: "AddCamera",
+                            child: Icon(Icons.add_a_photo),
+                            onPressed: _openGalleryCamera,
+                          ),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.grey[200],
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(width: 8.0),
-                          itemBuilder: (_, i) {
+                  ),
+                ),
+                CustomCard(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text("Tags", style: Theme.of(context).textTheme.caption),
+                      const SizedBox(height: 10.0),
+                      Wrap(
+                        spacing: 8.0,
+                        runSpacing: -6.0,
+                        children: List.generate(
+                          _selectedTags.length,
+                          (i) {
                             return Chip(
                               label: Text(
                                 _selectedTags[i],
@@ -133,54 +177,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               backgroundColor: Colors.grey[600],
                             );
                           },
-                          itemCount: _selectedTags.length,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Content of post",
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: BtnColored(
+                          text: "Add tag",
+                          onPressed: _openTagDialog,
+                        ),
+                      ),
+                    ],
                   ),
-                  maxLines: 6,
-                  minLines: 1,
-                  keyboardType: TextInputType.multiline,
-                  maxLength: 1000,
-                  maxLengthEnforced: false,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Additional info of place",
-                  ),
-                  maxLines: 6,
-                  minLines: 1,
-                  keyboardType: TextInputType.multiline,
-                  maxLength: 500,
-                  maxLengthEnforced: false,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Positioned(
-          bottom: 16.0,
-          right: 16.0,
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              // TODO: Send post
-            },
-            icon: const Icon(Icons.send),
-            label: Text("Add post"),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
