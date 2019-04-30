@@ -24,9 +24,12 @@ class CustomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       margin: margin,
-      child: Padding(
-        padding: padding,
-        child: child,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
       ),
     );
   }
