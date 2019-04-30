@@ -51,20 +51,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future _openTagDialog() async {
-    showDialog(
-        context: context,
-        builder: (_) => TagsDialog(
-              tags: _tags,
-              selectedTags: _selectedTags,
-              onTagChanged: (tag, checked) {
-                setState(() {
-                  if (checked)
-                    _selectedTags.add(tag);
-                  else
-                    _selectedTags.remove(tag);
-                });
-              },
-            ));
+    List<String> newTags = await showDialog<List<String>>(
+      context: context,
+      builder: (_) => TagsDialog(
+            tags: _tags,
+            selectedTags: _selectedTags,
+          ),
+    );
+    if (newTags != null) setState(() => _selectedTags = newTags);
   }
 
   @override
