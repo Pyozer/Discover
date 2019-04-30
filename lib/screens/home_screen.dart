@@ -1,3 +1,4 @@
+import 'package:discover/screens/add_post_screen.dart';
 import 'package:discover/screens/map_screen.dart';
 import 'package:discover/widgets/list/main_post_list.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -92,8 +93,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => AddPostScreen()),
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
