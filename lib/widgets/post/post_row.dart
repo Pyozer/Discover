@@ -1,6 +1,6 @@
 import 'package:discover/screens/post_screen.dart';
-import 'package:discover/widgets/rounded_image.dart';
-import 'package:discover/widgets/user_image.dart';
+import 'package:discover/widgets/ui/rounded_image.dart';
+import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
 
 enum MenuPost { report }
@@ -39,10 +39,7 @@ class PostRow extends StatelessWidget {
             child: IntrinsicHeight(
               child: Row(
                 children: [
-                  UserImage(
-                    userId: "fdghj-dfgh-dfgh-fdgh",
-                    size: 50,
-                  ),
+                  UserImage(userId: "fdghj-dfgh-dfgh-fdgh", size: 50),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
@@ -71,9 +68,8 @@ class PostRow extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => PostScreen()
-              ));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => PostScreen()));
             },
             child: RoundedImage(
               imageUrl: img,

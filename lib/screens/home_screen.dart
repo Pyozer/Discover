@@ -1,5 +1,6 @@
-import 'package:discover/widgets/main_post_list.dart';
-import 'package:discover/widgets/user_image.dart';
+import 'package:discover/screens/map_screen.dart';
+import 'package:discover/widgets/list/main_post_list.dart';
+import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           MainPostList(),
           MainPostList(),
-          MainPostList(),
+          MapScreen(),
         ],
       ),
       drawer: Drawer(
@@ -89,6 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

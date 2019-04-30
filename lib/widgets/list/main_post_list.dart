@@ -1,4 +1,4 @@
-import 'package:discover/widgets/post_row.dart';
+import 'package:discover/widgets/post/post_row.dart';
 import 'package:flutter/material.dart';
 
 class MainPostList extends StatefulWidget {
