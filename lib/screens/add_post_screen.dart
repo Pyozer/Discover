@@ -17,7 +17,21 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   File _image;
-  List<String> _tags = ["Cascade", "Monument", "Plage", "Nature", "Musée", "Bibliothèque", "Statue", "Lieu culte", "Mairie", "Château", "Ruine", "Boutique", "Restaurant"];
+  List<String> _tags = [
+    "Cascade",
+    "Monument",
+    "Plage",
+    "Nature",
+    "Musée",
+    "Bibliothèque",
+    "Statue",
+    "Lieu culte",
+    "Mairie",
+    "Château",
+    "Ruine",
+    "Boutique",
+    "Restaurant",
+  ];
   List<String> _selectedTags = [];
 
   Future _openGalleryCamera() async {
@@ -72,16 +86,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
         elevation: 0,
         title: Text("Add post"),
         centerTitle: true,
-        actions: [
-          FlatButton(
-            textColor: Colors.white,
-            child: Text("PUBLISH"),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-            onPressed: () {
-              // TODO: Send post
-            },
-          ),
-        ],
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -92,7 +96,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           ),
           SafeArea(
             child: ListView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
               children: [
                 CustomCard(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -180,9 +184,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         ),
                       ),
                       Align(
-                        alignment: Alignment.bottomRight,
+                        alignment: Alignment.bottomLeft,
                         child: BtnColored(
-                          text: "Add tag",
+                          text: "Edit tags",
                           onPressed: _openTagDialog,
                         ),
                       ),
@@ -193,6 +197,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // TODO: Send post
+        },
+        icon: const Icon(Icons.send),
+        label: Text("Send post"),
       ),
     );
   }
