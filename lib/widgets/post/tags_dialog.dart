@@ -61,7 +61,7 @@ class _TagsDialogState extends State<TagsDialog> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 20, 12),
+            padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
