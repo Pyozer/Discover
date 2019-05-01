@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _listKey = GlobalKey<MainPostListState>();
   int _currentIndex = 0;
 
   @override
@@ -34,8 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          MainPostList(),
-          MainPostList(),
+          MainPostList(key: _listKey),
           MapScreen(),
         ],
       ),
@@ -100,19 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (page) {
-          setState(() => _currentIndex = page);
+          if (_currentIndex == page && page == 0)
+            _listKey.currentState?.goToTop();
+          else if (_currentIndex != page)
+            setState(() => _currentIndex = page);
         },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on),
             title: Text("All posts"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            title: Text("Friends posts"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
