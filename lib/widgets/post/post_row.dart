@@ -10,21 +10,6 @@ const img = "http://images.unsplash.com/photo-1555985202-12975b0235dc";
 class PostRow extends StatelessWidget {
   const PostRow({Key key}) : super(key: key);
 
-  Widget _buildReportBtn(BuildContext context) {
-    return PopupMenuButton<MenuPost>(
-      icon: Icon(Icons.more_vert),
-      onSelected: (MenuPost result) {
-        // TODO: Report post
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuPost>>[
-            const PopupMenuItem<MenuPost>(
-              value: MenuPost.report,
-              child: Text('Report'),
-            ),
-          ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -35,51 +20,42 @@ class PostRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 14, 0, 14),
+            padding: const EdgeInsets.all(14),
             child: IntrinsicHeight(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserImage(userId: "fdghj-dfgh-dfgh-fdgh", size: 50),
+                  UserImage(userId: "fdghj-dfgh-dfgh-fdgh", size: 40),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Username",
-                              style: textTheme.title.copyWith(fontSize: 14.0),
-                            ),
-                            const SizedBox(width: 4.0),
-                            Text("• 21 hours", style: textTheme.caption),
-                          ],
+                        Text(
+                          "Username",
+                          style: textTheme.title.copyWith(fontSize: 15.0),
                         ),
-                        const SizedBox(height: 8.0),
-                        Text("150m", style: textTheme.body1)
+                        const SizedBox(height: 6.0),
+                        Text("150m", style: textTheme.caption)
                       ],
                     ),
                   ),
-                  _buildReportBtn(context),
+                  Text("21 hours ago", style: textTheme.caption),
                 ],
               ),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => PostScreen()));
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => PostScreen()),
+              );
             },
             child: RoundedImage(
               imageUrl: img,
               size: Size.fromHeight(250),
               radius: 0.0,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16.0, 16.0, 0.0),
-            child: Text("Wesh ca va ?"),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
