@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:discover/models/auth/login_response.dart';
+import 'package:discover/models/users/user.dart';
 
 class Post {
   int idPost;
@@ -12,7 +11,7 @@ class Post {
   int likesPost;
   int commentsPost;
   int isUserLike;
-  LoginResponse authorPost;
+  User authorPost;
 
   Post({
     this.idPost,
@@ -39,6 +38,6 @@ class Post {
         likesPost: json["likes_post"],
         commentsPost: json["comments_post"],
         isUserLike: json["isUserLike"],
-        authorPost: LoginResponse.fromJson(json["author_post"]),
+        authorPost: User.fromJson(json["author_post"]),
       );
 }

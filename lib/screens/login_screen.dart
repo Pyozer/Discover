@@ -1,6 +1,6 @@
-import 'package:discover/models/auth/login_response.dart';
-import 'package:discover/models/auth/request/login_payload.dart';
-import 'package:discover/models/auth/request/register_payload.dart';
+import 'package:discover/models/users/request/login_payload.dart';
+import 'package:discover/models/users/request/register_payload.dart';
+import 'package:discover/models/users/user.dart';
 import 'package:discover/screens/home_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
@@ -346,7 +346,7 @@ class _LoginPageState extends State<LoginScreen>
     }
 
     try {
-      LoginResponse response = await Api().login(
+      User response = await Api().login(
         LoginPayload(email: email, password: pwd),
       );
       PreferencesProvider.of(context).setAuthToken(response.tokenUser);
@@ -383,7 +383,7 @@ class _LoginPageState extends State<LoginScreen>
     }
 
     try {
-      LoginResponse response = await Api().register(RegisterPayload(
+      User response = await Api().register(RegisterPayload(
         email: email,
         password: pwd,
         firstName: firstName,
