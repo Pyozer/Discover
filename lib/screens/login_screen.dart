@@ -1,3 +1,4 @@
+import 'package:discover/screens/home_screen.dart';
 import 'package:discover/widgets/ui/tab_indicator_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,7 +75,7 @@ class _LoginPageState extends State<LoginPage>
           child: Container(
             width: size.width,
             height: size.height,
-            decoration: BoxDecoration(gradient: Gradients.rainbowBlue),
+            decoration: BoxDecoration(gradient: Gradients.coldLinear),
             child: Column(
               children: [
                 const SizedBox(height: 75),
@@ -190,7 +191,7 @@ class _LoginPageState extends State<LoginPage>
         ),
       ),
       callback: onPressed,
-      gradient: Gradients.jShine,
+      gradient: Gradients.hotLinear,
     );
   }
 
@@ -305,10 +306,16 @@ class _LoginPageState extends State<LoginPage>
   void _onSignIn() {
     _formSignInKey.currentState?.save();
     //TODO: Add fields check
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => HomeScreen()),
+    );
   }
 
   void _onSignUp() {
     _formSignUpKey.currentState?.save();
     //TODO: Add fields check
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => HomeScreen()),
+    );
   }
 }
