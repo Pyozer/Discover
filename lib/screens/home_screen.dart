@@ -1,4 +1,5 @@
 import 'package:discover/screens/add_post_screen.dart';
+import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
 import 'package:discover/widgets/list/main_post_list.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -87,7 +88,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text("Logout"),
               leading: Icon(Icons.exit_to_app),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                  (_) => true,
+                );
+              },
             ),
           ],
         ),
@@ -106,8 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (page) {
           if (_currentIndex == page && page == 0)
             _listKey.currentState?.goToTop();
-          else if (_currentIndex != page)
-            setState(() => _currentIndex = page);
+          else if (_currentIndex != page) setState(() => _currentIndex = page);
         },
         items: [
           BottomNavigationBarItem(

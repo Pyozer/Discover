@@ -1,19 +1,24 @@
+import 'package:discover/models/auth/login_response.dart';
+import 'package:discover/models/auth/request/register_payload.dart';
 import 'package:discover/screens/home_screen.dart';
+import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/ui/tab_indicator_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 
-enum Field { NAME, EMAIL, PASSWORD, PWDCONFIRM }
+enum Field { FIRSTNAME, LASTNAME, EMAIL, PASSWORD, PWDCONFIRM }
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
+class _LoginPageState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formSignInKey = GlobalKey<FormState>();
@@ -27,11 +32,13 @@ class _LoginPageState extends State<LoginPage>
   };
 
   // SignUp
+  final _focusLastnameSignup = FocusNode();
   final _focusEmailSignup = FocusNode();
   final _focusPwdSignup = FocusNode();
   final _focusPwdConfirmSignup = FocusNode();
   final _signUpValues = <Field, String>{
-    Field.NAME: "",
+    Field.FIRSTNAME: "",
+    Field.LASTNAME: "",
     Field.EMAIL: "",
     Field.PASSWORD: "",
     Field.PWDCONFIRM: "",
@@ -55,6 +62,7 @@ class _LoginPageState extends State<LoginPage>
   @override
   void dispose() {
     _focusPwdLogin.dispose();
+    _focusLastnameSignup.dispose();
     _focusEmailSignup.dispose();
     _focusPwdSignup.dispose();
     _focusPwdConfirmSignup.dispose();
@@ -151,11 +159,13 @@ class _LoginPageState extends State<LoginPage>
     FocusNode focusNode,
     FocusNode nextFocus,
     FormFieldSetter<String> onSaved,
+    bool isPassword = false,
   }) {
     return TextFormField(
       focusNode: focusNode,
       keyboardType: inputType,
       onSaved: onSaved,
+      obscureText: isPassword,
       style: const TextStyle(
         fontFamily: "WorkSans",
         fontSize: 16.0,
@@ -226,6 +236,7 @@ class _LoginPageState extends State<LoginPage>
                     hint: "Password",
                     focusNode: _focusPwdLogin,
                     onSaved: (value) => _signInValues[Field.PASSWORD] = value,
+                    isPassword: true,
                   ),
                 ],
               ),
@@ -250,16 +261,23 @@ class _LoginPageState extends State<LoginPage>
           ),
           child: Container(
             width: 300.0,
-            height: 270.0,
+            height: 332.0,
             child: Form(
               key: _formSignUpKey,
               child: Column(
                 children: [
                   _buildTextField(
                     icon: Icons.person,
-                    hint: "Name",
+                    hint: "First name",
+                    nextFocus: _focusLastnameSignup,
+                    onSaved: (value) => _signUpValues[Field.FIRSTNAME] = value,
+                  ),
+                  const Divider(height: 0),
+                  _buildTextField(
+                    icon: Icons.person,
+                    hint: "Last name",
                     nextFocus: _focusEmailSignup,
-                    onSaved: (value) => _signUpValues[Field.NAME] = value,
+                    onSaved: (value) => _signUpValues[Field.LASTNAME] = value,
                   ),
                   const Divider(height: 0),
                   _buildTextField(
@@ -277,6 +295,7 @@ class _LoginPageState extends State<LoginPage>
                     focusNode: _focusPwdSignup,
                     nextFocus: _focusPwdConfirmSignup,
                     onSaved: (value) => _signUpValues[Field.PASSWORD] = value,
+                    isPassword: true,
                   ),
                   const Divider(height: 0),
                   _buildTextField(
@@ -284,13 +303,14 @@ class _LoginPageState extends State<LoginPage>
                     hint: "Confirmation",
                     focusNode: _focusPwdConfirmSignup,
                     onSaved: (value) => _signUpValues[Field.PWDCONFIRM] = value,
+                    isPassword: true,
                   ),
                 ],
               ),
             ),
           ),
         ),
-        Positioned(top: 250.0, child: _buildBtn('Signup', _onSignUp)),
+        Positioned(top: 310.0, child: _buildBtn('Signup', _onSignUp)),
       ],
     );
   }
@@ -303,6 +323,10 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  void _showMessage(String message) {
+    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
+  }
+
   void _onSignIn() {
     _formSignInKey.currentState?.save();
     //TODO: Add fields check
@@ -311,11 +335,44 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  void _onSignUp() {
+  void _onSignUp() async {
     _formSignUpKey.currentState?.save();
-    //TODO: Add fields check
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => HomeScreen()),
-    );
+
+    final email = _signUpValues[Field.EMAIL].trim();
+    final pwd = _signUpValues[Field.PASSWORD];
+    final pwdConfirm = _signUpValues[Field.PWDCONFIRM];
+    final firstName = _signUpValues[Field.FIRSTNAME].trim();
+    final lastName = _signUpValues[Field.LASTNAME].trim();
+
+    if (email.isEmpty ||
+        pwd.isEmpty ||
+        pwdConfirm.isEmpty ||
+        firstName.isEmpty ||
+        lastName.isEmpty) {
+      return _showMessage("You must fill all textfields");
+    } else if (!isEmail(_signUpValues[Field.EMAIL])) {
+      return _showMessage("Email is wrong");
+    } else if (_signUpValues[Field.PASSWORD] !=
+        _signUpValues[Field.PWDCONFIRM]) {
+      return _showMessage("Password and confirmation are not identical");
+    }
+
+    try {
+      LoginResponse response = await Api().register(RegisterPayload(
+        email: _signUpValues[Field.EMAIL],
+        password: _signUpValues[Field.PASSWORD],
+        firstName: _signUpValues[Field.FIRSTNAME],
+        lastName: _signUpValues[Field.LASTNAME],
+      ));
+      PreferencesProvider.of(context).setAuthToken(response.tokenUser);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } catch (e) {
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    }
   }
 }

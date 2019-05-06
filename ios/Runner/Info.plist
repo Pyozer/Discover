@@ -47,5 +47,7 @@
 	<string>Allow user to choose a picture to publish a post</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow user to take a picture with camera to publish a post</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is needed to show posts near the user</string>
 </dict>
 </plist>
