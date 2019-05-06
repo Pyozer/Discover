@@ -1,4 +1,5 @@
 import 'package:discover/models/auth/login_response.dart';
+import 'package:discover/models/auth/request/login_payload.dart';
 import 'package:discover/models/auth/request/register_payload.dart';
 import 'package:discover/screens/home_screen.dart';
 import 'package:discover/utils/api/api.dart';
@@ -332,12 +333,32 @@ class _LoginPageState extends State<LoginScreen>
     _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _onSignIn() {
+  void _onSignIn() async {
     _formSignInKey.currentState?.save();
-    //TODO: Add fields check
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => HomeScreen()),
-    );
+
+    final email = _signInValues[Field.EMAIL].trim();
+    final pwd = _signInValues[Field.PASSWORD];
+
+    if (email.isEmpty || pwd.isEmpty) {
+      return _showMessage("You must fill all textfields");
+    } else if (!isEmail(email)) {
+      return _showMessage("Email is wrong");
+    }
+
+    try {
+      LoginResponse response = await Api().login(
+        LoginPayload(email: email, password: pwd),
+      );
+      PreferencesProvider.of(context).setAuthToken(response.tokenUser);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } catch (e) {
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    }
   }
 
   void _onSignUp() async {
@@ -355,19 +376,18 @@ class _LoginPageState extends State<LoginScreen>
         firstName.isEmpty ||
         lastName.isEmpty) {
       return _showMessage("You must fill all textfields");
-    } else if (!isEmail(_signUpValues[Field.EMAIL])) {
+    } else if (!isEmail(email)) {
       return _showMessage("Email is wrong");
-    } else if (_signUpValues[Field.PASSWORD] !=
-        _signUpValues[Field.PWDCONFIRM]) {
+    } else if (pwd != pwdConfirm) {
       return _showMessage("Password and confirmation are not identical");
     }
 
     try {
       LoginResponse response = await Api().register(RegisterPayload(
-        email: _signUpValues[Field.EMAIL],
-        password: _signUpValues[Field.PASSWORD],
-        firstName: _signUpValues[Field.FIRSTNAME],
-        lastName: _signUpValues[Field.LASTNAME],
+        email: email,
+        password: pwd,
+        firstName: firstName,
+        lastName: lastName,
       ));
       PreferencesProvider.of(context).setAuthToken(response.tokenUser);
 

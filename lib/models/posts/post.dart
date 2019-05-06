@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:discover/models/auth/login_response.dart';
 
-class PostResponse {
+class Post {
   int idPost;
   String contentPost;
   String photoPost;
@@ -14,7 +14,7 @@ class PostResponse {
   int isUserLike;
   LoginResponse authorPost;
 
-  PostResponse({
+  Post({
     this.idPost,
     this.contentPost,
     this.photoPost,
@@ -27,10 +27,9 @@ class PostResponse {
     this.authorPost,
   });
 
-  factory PostResponse.fromRawJson(String str) =>
-      PostResponse.fromJson(json.decode(str));
+  factory Post.fromRawJson(String str) => Post.fromJson(json.decode(str));
 
-  factory PostResponse.fromJson(Map<String, dynamic> json) => PostResponse(
+  factory Post.fromJson(Map<String, dynamic> json) => Post(
         idPost: json["id_post"],
         contentPost: json["content_post"],
         photoPost: json["photo_post"],
