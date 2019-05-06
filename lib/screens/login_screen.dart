@@ -7,7 +7,9 @@ import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/ui/tab_indicator_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+
 
 enum Field { FIRSTNAME, LASTNAME, EMAIL, PASSWORD, PWDCONFIRM }
 
@@ -87,8 +89,11 @@ class _LoginPageState extends State<LoginScreen>
             child: Column(
               children: [
                 const SizedBox(height: 75),
-                Image.asset('assets/images/login_logo.png', width: 250),
-                const SizedBox(height: 20),
+                SvgPicture.asset(
+                  'assets/images/logo.svg',
+                  height: 200,
+                ),
+                const SizedBox(height: 32),
                 _buildMenuBar(context),
                 const SizedBox(height: 22),
                 Expanded(

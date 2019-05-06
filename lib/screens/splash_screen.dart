@@ -3,6 +3,7 @@ import 'package:discover/screens/login_screen.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
@@ -55,9 +56,8 @@ class _SplashScreenState extends State<SplashScreen> {
           const Expanded(child: SizedBox.shrink()),
           Expanded(
             child: Center(
-              child: Image.network(
-                "https://uploads.knightlab.com/storymapjs/9062c0089a5476d88ae6f8fa1ecfd95e/dezibel-zuerichsee/_images/33.png",
-                height: 180,
+              child: SvgPicture.asset(
+                'assets/images/logo.svg',
                 width: 180,
               ),
             ),
