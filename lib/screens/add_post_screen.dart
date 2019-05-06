@@ -9,6 +9,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
+enum Position { GPS, CUSTOM }
+
 class AddPostScreen extends StatefulWidget {
   AddPostScreen({Key key}) : super(key: key);
 
@@ -33,6 +35,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     "Restaurant",
   ];
   List<String> _selectedTags = [];
+  Position _positionType = Position.GPS;
 
   Future _openGalleryCamera() async {
     ImageSource source = await showDialog(
@@ -99,6 +102,33 @@ class _AddPostScreenState extends State<AddPostScreen> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
               children: [
                 CustomCard(
+                  padding: EdgeInsets.zero,
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  child: Container(
+                    height: screenSize.height / 3.5,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _image == null
+                            ? Image.network(
+                                "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(_image, fit: BoxFit.cover),
+                        Positioned(
+                          bottom: 16,
+                          right: 16,
+                          child: FloatingActionButton(
+                            heroTag: "AddCamera",
+                            child: Icon(Icons.add_a_photo),
+                            onPressed: _openGalleryCamera,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                CustomCard(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                   margin: const EdgeInsets.only(bottom: 16.0),
                   child: Column(
@@ -127,30 +157,42 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   ),
                 ),
                 CustomCard(
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 6),
                   margin: const EdgeInsets.only(bottom: 16.0),
-                  child: Container(
-                    height: screenSize.height / 3.5,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        _image == null
-                            ? Image.network(
-                                "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(_image, fit: BoxFit.cover),
-                        Positioned(
-                          bottom: 16,
-                          right: 16,
-                          child: FloatingActionButton(
-                            heroTag: "AddCamera",
-                            child: Icon(Icons.add_a_photo),
-                            onPressed: _openGalleryCamera,
-                          ),
-                        )
-                      ],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Post location",
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      RadioListTile<Position>(
+                        title: Text(
+                          "Custom position",
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        value: Position.CUSTOM,
+                        groupValue: _positionType,
+                        onChanged: (checked) {
+                          setState(() => _positionType = Position.CUSTOM);
+                        },
+                      ),
+                      RadioListTile<Position>(
+                        title: Text(
+                          "My actual position",
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        value: Position.GPS,
+                        groupValue: _positionType,
+                        onChanged: (checked) {
+                          setState(() => _positionType = Position.GPS);
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 CustomCard(
@@ -176,8 +218,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   _selectedTags.remove(_selectedTags[i]);
                                 });
                               },
-                              deleteIcon:
-                                  const Icon(Icons.close, color: Colors.white),
+                              deleteIcon: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                              ),
                               backgroundColor: Colors.grey[600],
                             );
                           },
