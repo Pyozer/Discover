@@ -222,28 +222,41 @@ class _PostScreenState extends State<PostScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          LikeButton(
-                            isLike: post.isUserLike,
-                            postId: post.idPost,
-                            likesCount: post.likesPost,
-                            onTap: (isLike) {
-                              setState(() => _fetch.data.isUserLike = isLike);
-                            },
-                            onDone: (_) {
-                              _fetchPost();
-                            },
+                          Expanded(
+                            child: Center(
+                              child: LikeButton(
+                                isLike: post.isUserLike,
+                                postId: post.idPost,
+                                likesCount: post.likesPost,
+                                onTap: (like) {
+                                  setState(() => _fetch.data.isUserLike = like);
+                                },
+                                onDone: (_) => _fetchPost(),
+                              ),
+                            ),
                           ),
-                          _buildHeaderIcon(
-                            icon: Icons.mode_comment,
-                            text: "${post.commentsPost} comments",
-                            onTap: () {},
+                          Expanded(
+                            child: Center(
+                              child: _buildHeaderIcon(
+                                icon: Icons.mode_comment,
+                                text: "${post.commentsPost} comments",
+                                onTap: () {
+                                  //TODO: Focus add comment textfield
+                                },
+                              ),
+                            ),
                           ),
-                          _buildHeaderIcon(
-                            icon: Icons.directions,
-                            text: post.distanceStr,
-                            onTap: () {},
+                          Expanded(
+                            child: Center(
+                              child: _buildHeaderIcon(
+                                icon: Icons.directions,
+                                text: post.distanceStr,
+                                onTap: () {
+                                  // TODO: Open map app
+                                },
+                              ),
+                            ),
                           ),
                         ],
                       ),
