@@ -7,7 +7,7 @@ class Post {
   int id;
   String content;
   String photo;
-  double distance;
+  int distance;
   DateTime date;
   double latitude;
   double longitude;
@@ -41,9 +41,7 @@ class Post {
         id: json["id_post"],
         content: json["content_post"],
         photo: json["photo_post"],
-        distance: json["distance"] != null
-            ? double.parse(json["distance"].toString())
-            : null,
+        distance: json["distance"],
         date: DateTime.parse(json["date_post"]),
         latitude: json["latitude_post"].toDouble(),
         longitude: json["longitude_post"].toDouble(),

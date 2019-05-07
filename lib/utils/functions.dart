@@ -48,7 +48,7 @@ String getTimeAgo(DateTime time) {
   return "$years year${years > 1 ? "s" : ""} ago";
 }
 
-String getDistance(double distance) {
+String getDistance(int distance) {
   if (distance == null) return "";
-  return distance < 1000 ? "$distance m" : "${distance ~/ 1000} km";
+  return distance < 1000 ? "${distance}m" : "${distance ~/ 1000}km";
 }
