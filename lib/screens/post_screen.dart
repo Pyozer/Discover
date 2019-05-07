@@ -1,6 +1,7 @@
 import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
+import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/like_button.dart';
@@ -28,6 +29,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _fetchPost() async {
+    if (!mounted || _fetch.isLoading) return;
     setState(() => _fetch.isLoading = true);
 
     try {
@@ -35,14 +37,14 @@ class _PostScreenState extends State<PostScreen> {
       final response = await Api().getPost(
         widget.postId,
         prefs.getUserPos(),
-        prefs.getUser()?.tokenUser,
+        prefs.getUser()?.token,
       );
 
       _fetch.data = response.posts?.first;
     } catch (e) {
       _fetch.error = e;
     }
-
+    if (!mounted) return;
     setState(() => _fetch.isLoading = false);
   }
 
@@ -50,7 +52,7 @@ class _PostScreenState extends State<PostScreen> {
     final prefs = PreferencesProvider.of(context);
     return await Api().getComments(
       widget.postId,
-      prefs.getUser()?.tokenUser,
+      prefs.getUser()?.token,
     );
   }
 
@@ -75,10 +77,10 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  Chip _buildChip(String tag) {
+  Chip _buildChip(Tag tag) {
     return Chip(
       elevation: 3,
-      label: Text(tag, style: const TextStyle(color: Colors.white)),
+      label: Text(tag.name, style: const TextStyle(color: Colors.white)),
       backgroundColor: Colors.grey[600],
     );
   }
@@ -121,11 +123,12 @@ class _PostScreenState extends State<PostScreen> {
       children: [
         Stack(
           children: [
-            Image.network(
-              post.photoPost,
+            FadeInImage.assetNetwork(
+              image: post.photo,
               fit: BoxFit.cover,
               height: screenSize.height / 3.5,
               width: screenSize.width,
+              placeholder: "assets/images/placeholder_post.png",
             ),
             AppBar(elevation: 0, backgroundColor: Colors.transparent),
           ],
@@ -147,13 +150,13 @@ class _PostScreenState extends State<PostScreen> {
                           Row(
                             children: [
                               UserImage(
-                                imageUrl: post.authorPost.photoUser,
+                                imageUrl: post.author.photo,
                                 size: 50,
                               ),
                               const SizedBox(width: 16.0),
                               Expanded(
                                 child: Text(
-                                  post.authorPost.userInfo,
+                                  post.author.userInfo,
                                   style: const TextStyle(fontSize: 18.0),
                                 ),
                               ),
@@ -162,16 +165,14 @@ class _PostScreenState extends State<PostScreen> {
                           const SizedBox(height: 20.0),
                           Text("Description", style: textTheme.caption),
                           const SizedBox(height: 8.0),
-                          Text(post.contentPost),
+                          Text(post.content),
                           const SizedBox(height: 20.0),
                           Text("Tags", style: textTheme.caption),
                           const SizedBox(height: 4.0),
                           Wrap(
                             spacing: 8.0,
                             runSpacing: -5.0,
-                            children: post.tags
-                                .map((t) => _buildChip(t.nomTag))
-                                .toList(),
+                            children: post.tags.map(_buildChip).toList(),
                           )
                         ],
                       ),
@@ -220,8 +221,8 @@ class _PostScreenState extends State<PostScreen> {
                             child: Center(
                               child: LikeButton(
                                 isLike: post.isUserLike,
-                                postId: post.idPost,
-                                likesCount: post.likesPost,
+                                postId: post.id,
+                                likesCount: post.likes,
                                 onTap: (like) {
                                   setState(() => _fetch.data.isUserLike = like);
                                 },
@@ -233,7 +234,7 @@ class _PostScreenState extends State<PostScreen> {
                             child: Center(
                               child: _buildHeaderIcon(
                                 icon: Icons.mode_comment,
-                                text: "${post.commentsPost} comments",
+                                text: "${post.comments} comments",
                                 onTap: () {
                                   //TODO: Focus add comment textfield
                                 },

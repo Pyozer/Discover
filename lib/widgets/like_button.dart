@@ -46,7 +46,7 @@ class _LikeButtonState extends State<LikeButton> {
     final prefs = PreferencesProvider.of(context);
     final response = await Api().likePost(
       widget.postId,
-      prefs.getUser()?.tokenUser,
+      prefs.getUser()?.token,
     );
     if (widget.onDone != null) widget.onDone(response.isLike);
   }

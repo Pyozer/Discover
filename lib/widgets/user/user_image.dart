@@ -1,9 +1,6 @@
 import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:flutter/material.dart';
 
-const kDefaultImg =
-    "https://www.beachfitbondi.com.au/wp-content/uploads/2017/12/placeholder-profile.jpg";
-
 class UserImage extends StatelessWidget {
   final String imageUrl;
   final double size;
@@ -19,9 +16,10 @@ class UserImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RoundedImage(
-      imageUrl: imageUrl ?? kDefaultImg,
+      imageUrl: imageUrl,
       size: Size.square(size),
       elevation: elevation,
+      placeholder: "assets/images/placeholder_user.jpg",
     );
   }
 }

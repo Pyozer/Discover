@@ -1,13 +1,10 @@
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
 import 'package:discover/widgets/like_button.dart';
-import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
 
 enum MenuPost { report }
-
-const img = "http://images.unsplash.com/photo-1555985202-12975b0235dc";
 
 class PostRow extends StatelessWidget {
   final Post post;
@@ -17,7 +14,7 @@ class PostRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final author = post.authorPost;
+    final author = post.author;
 
     return Card(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -30,14 +27,14 @@ class PostRow extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserImage(imageUrl: post.authorPost.photoUser, size: 40),
+                  UserImage(imageUrl: author.photo, size: 40),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          "${author.firstNameUser} ${author.lastNameUser}",
+                          author.userInfo,
                           style: textTheme.title.copyWith(fontSize: 15.0),
                         ),
                         const SizedBox(height: 6.0),
@@ -54,14 +51,15 @@ class PostRow extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => PostScreen(postId: post.idPost),
+                  builder: (_) => PostScreen(postId: post.id),
                 ),
               );
             },
-            child: RoundedImage(
-              imageUrl: img,
-              size: Size.fromHeight(250),
-              radius: 0.0,
+            child: FadeInImage.assetNetwork(
+              image: post.photo,
+              height: 250,
+              placeholder: "assets/images/placeholder_post.png",
+              fit: BoxFit.cover,
             ),
           ),
           Padding(
@@ -74,8 +72,8 @@ class PostRow extends StatelessWidget {
                     children: [
                       LikeButton(
                         isLike: post.isUserLike,
-                        postId: post.idPost,
-                        likesCount: post.likesPost,
+                        postId: post.id,
+                        likesCount: post.likes,
                         isSmall: true,
                       ),
                     ],
@@ -93,7 +91,7 @@ class PostRow extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(width: 10.0),
-                      Text(post.commentsPost.toString())
+                      Text(post.comments.toString())
                     ],
                   ),
                 ),

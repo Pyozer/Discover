@@ -61,7 +61,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> _sendPost() async {
     String imageUrl = await _uploadImage();
-
   }
 
   Future _openGalleryCamera() async {
@@ -134,8 +133,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       fit: StackFit.expand,
                       children: [
                         _image == null
-                            ? Image.network(
-                                "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg",
+                            ? Image.asset(
+                                "assets/images/placeholder_post.png",
                                 fit: BoxFit.cover,
                               )
                             : Image.file(_image, fit: BoxFit.cover),

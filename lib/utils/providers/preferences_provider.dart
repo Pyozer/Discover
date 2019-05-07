@@ -34,16 +34,10 @@ class PreferencesProvider extends StatefulWidget {
 
 class PreferencesProviderState extends State<PreferencesProvider> {
   bool _isPrefInit = false;
-  bool _isLogin = false;
   Position _userPosition;
   User _user;
 
-  bool isLogin() => _isLogin ?? false;
-
-  void setLogin(bool isUserLogged, [bool state = false]) {
-    _setPref(() => _isLogin = isUserLogged, state);
-    widget.prefs.setBool(PrefKey.isLogged, isUserLogged);
-  }
+  bool isLogin() => _user != null && _user.isValid;
 
   Position getUserPos() {
     return _userPosition ?? Position(latitude: 48.789311, longitude: 2.363550);
@@ -66,10 +60,9 @@ class PreferencesProviderState extends State<PreferencesProvider> {
 
   void initPreferences() {
     if (_isPrefInit) return;
-    _isLogin = widget.prefs.getBool(PrefKey.isLogged);
-    /*_userPosition = stringToPosition(
+    _userPosition = stringToPosition(
       widget.prefs.getString(PrefKey.lastUserPos),
-    );*/
+    );
     String userJson = widget.prefs.getString(PrefKey.user);
     if (userJson != null) {
       _user = User.fromRawJson(userJson);

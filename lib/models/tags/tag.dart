@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 class Tag {
-  int idTag;
-  String nomTag;
+  int id;
+  String name;
 
-  Tag({this.idTag, this.nomTag});
+  Tag({this.id, this.name});
 
   factory Tag.fromRawJson(String str) => Tag.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
   factory Tag.fromJson(Map<String, dynamic> json) =>
-      Tag(idTag: json["id_tag"], nomTag: json["nom_tag"]);
+      Tag(id: json["id_tag"], name: json["nom_tag"]);
 
-  Map<String, dynamic> toJson() => {"id_tag": idTag, "nom_tag": nomTag};
+  Map<String, dynamic> toJson() => {"id_tag": id, "nom_tag": name};
 }

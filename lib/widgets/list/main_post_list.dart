@@ -24,7 +24,7 @@ class MainPostListState extends State<MainPostList> {
         distance: 200000,
         tags: [],
       ),
-      prefs.getUser()?.tokenUser,
+      prefs.getUser()?.token,
     );
     return response;
   }

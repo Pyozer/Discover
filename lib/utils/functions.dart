@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 String positionToJsonString(Position position) {
   if (position == null) return null;
-  return json.encode(<String, double>{
+  return json.encode(<String, dynamic>{
     'latitude': position.latitude,
     'longitude': position.longitude,
   });
@@ -12,7 +12,7 @@ String positionToJsonString(Position position) {
 
 Position stringToPosition(String jsonStr) {
   if (jsonStr == null) return null;
-  Map<String, double> jsonMap = json.decode(jsonStr);
+  Map<String, dynamic> jsonMap = json.decode(jsonStr);
   return Position(
     latitude: jsonMap['latitude'],
     longitude: jsonMap['longitude'],

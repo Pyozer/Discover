@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 class Comment {
-  int idComment;
+  int id;
   int idPost;
-  String textComment;
-  DateTime dateComment;
+  String text;
+  DateTime date;
   int idUser;
   String firstNameUser;
   String lastNameUser;
   String photoUser;
 
   Comment({
-    this.idComment,
+    this.id,
     this.idPost,
-    this.textComment,
-    this.dateComment,
+    this.text,
+    this.date,
     this.idUser,
     this.firstNameUser,
     this.lastNameUser,
@@ -22,14 +22,14 @@ class Comment {
   });
 
   String get userInfo => "$firstNameUser $lastNameUser";
-  
+
   factory Comment.fromRawJson(String str) => Comment.fromJson(json.decode(str));
 
-  factory Comment.fromJson(Map<String, dynamic> json) => new Comment(
-        idComment: json["id_comment"],
+  factory Comment.fromJson(Map<String, dynamic> json) => Comment(
+        id: json["id_comment"],
         idPost: json["id_post"],
-        textComment: json["text_comment"],
-        dateComment: DateTime.parse(json["date_comment"]),
+        text: json["text_comment"],
+        date: DateTime.parse(json["date_comment"]),
         idUser: json["id_user"],
         firstNameUser: json["first_name_user"],
         lastNameUser: json["last_name_user"],

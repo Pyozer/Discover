@@ -26,17 +26,15 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _fetchPost() async {
     final prefs = PreferencesProvider.of(context);
-    final res = await Api().getPostsMaps(prefs.getUser()?.tokenUser);
+    final res = await Api().getPostsMaps(prefs.getUser()?.token);
     setState(() => _posts = res.posts ?? []);
   }
 
   Marker _buildMarker(Post post) {
     return Marker(
-      position: LatLng(post.latitudePost, post.longitudePost),
-      markerId: MarkerId("${post.idPost}"),
-      infoWindow: InfoWindow(
-        title: "Post by ${post.authorPost.userInfo}",
-      ),
+      position: LatLng(post.latitude, post.longitude),
+      markerId: MarkerId("${post.id}"),
+      infoWindow: InfoWindow(title: "Post by ${post.author.userInfo}"),
     );
   }
 

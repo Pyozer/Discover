@@ -47,11 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const SizedBox(height: 24.0),
             Center(
-              child: UserImage(
-                imageUrl: user.photoUser,
-                size: 125,
-                elevation: 2.0,
-              ),
+              child: UserImage(imageUrl: user.photo, size: 125, elevation: 2),
             ),
             const SizedBox(height: 16.0),
             Text(

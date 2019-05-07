@@ -29,10 +29,7 @@ class CommentRow extends StatelessWidget {
                   maxLines: 1,
                 ),
                 const SizedBox(height: 6.0),
-                Text(
-                  comment.textComment,
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
+                Text(comment.text, style: TextStyle(color: Colors.grey[700])),
               ],
             ),
           ),

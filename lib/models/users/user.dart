@@ -1,43 +1,50 @@
 import 'dart:convert';
 
 class User {
-  String tokenUser;
-  int idUser;
-  String firstNameUser;
-  String lastNameUser;
-  String emailUser;
-  String photoUser;
+  String token;
+  int id;
+  String firstName;
+  String lastName;
+  String email;
+  String photo;
 
   User({
-    this.tokenUser,
-    this.idUser,
-    this.firstNameUser,
-    this.lastNameUser,
-    this.emailUser,
-    this.photoUser,
+    this.token,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.photo,
   });
 
-  String get userInfo => "$firstNameUser $lastNameUser";
+  String get userInfo => "$firstName $lastName";
   
+  bool get isValid =>
+      token != null &&
+      id != null &&
+      firstName != null &&
+      lastName != null &&
+      email != null;
+
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        tokenUser: json["token_user"],
-        idUser: json["id_user"],
-        firstNameUser: json["first_name_user"],
-        lastNameUser: json["last_name_user"],
-        emailUser: json["email_user"],
-        photoUser: json["photo_user"],
+        token: json["token_user"],
+        id: json["id_user"],
+        firstName: json["first_name_user"],
+        lastName: json["last_name_user"],
+        email: json["email_user"],
+        photo: json["photo_user"],
       );
 
   String toRawJson() => json.encode(toJson());
 
   Map<String, dynamic> toJson() => {
-        "token_user": tokenUser,
-        "id_user": idUser,
-        "first_name_user": firstNameUser,
-        "last_name_user": lastNameUser,
-        "email_user": emailUser,
-        "photo_user": photoUser
+        "token_user": token,
+        "id_user": id,
+        "first_name_user": firstName,
+        "last_name_user": lastName,
+        "email_user": email,
+        "photo_user": photo
       };
 }
