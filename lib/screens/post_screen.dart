@@ -28,9 +28,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _fetchPost() async {
-    setState(() {
-      _fetch.isLoading = true;
-    });
+    setState(() => _fetch.isLoading = true);
 
     try {
       final prefs = PreferencesProvider.of(context);
@@ -45,9 +43,7 @@ class _PostScreenState extends State<PostScreen> {
       _fetch.error = e;
     }
 
-    setState(() {
-      _fetch.isLoading = false;
-    });
+    setState(() => _fetch.isLoading = false);
   }
 
   Future<CommentsResponse> _fetchComment() async {
@@ -87,14 +83,37 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
+  Widget _buildComments() {
+    return FutureBuilder<CommentsResponse>(
+      future: _fetchComment(),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting)
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        if (snap.hasError || (snap.data.comments?.isEmpty ?? true))
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(snap.error?.toString() ?? "No comments"),
+          );
+        return Column(
+          children: snap.data.comments
+              .map((comment) => CommentRow(comment: comment))
+              .toList(),
+        );
+      },
+    );
+  }
+
   Widget _buildContent() {
     final screenSize = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
     if (!_fetch.hasData && _fetch.isLoading)
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     if (_fetch.hasError) return Center(child: Text(_fetch.error.toString()));
-    if (!_fetch.hasData) return Center(child: Text("Empty"));
+    if (!_fetch.hasData) return const Center(child: Text("Empty"));
     final post = _fetch.data;
 
     return Column(
@@ -114,13 +133,10 @@ class _PostScreenState extends State<PostScreen> {
         Expanded(
           child: Stack(
             children: [
-              Positioned(
+              Positioned.fill(
                 top: 130,
-                left: 0,
-                right: 0,
-                bottom: 0,
                 child: ListView(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 0),
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 48),
                   children: [
                     CustomCard(
                       margin: EdgeInsets.only(bottom: 10.0),
@@ -131,15 +147,13 @@ class _PostScreenState extends State<PostScreen> {
                           Row(
                             children: [
                               UserImage(
-                                userId: post.authorPost.idUser,
+                                imageUrl: post.authorPost.photoUser,
                                 size: 50,
                               ),
                               const SizedBox(width: 16.0),
                               Expanded(
                                 child: Text(
-                                  post.authorPost.firstNameUser +
-                                      " " +
-                                      post.authorPost.lastNameUser,
+                                  post.authorPost.userInfo,
                                   style: const TextStyle(fontSize: 18.0),
                                 ),
                               ),
@@ -175,28 +189,7 @@ class _PostScreenState extends State<PostScreen> {
                               style: textTheme.caption,
                             ),
                           ),
-                          FutureBuilder<CommentsResponse>(
-                            future: _fetchComment(),
-                            builder: (context, snap) {
-                              if (!snap.hasData)
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              if (snap.hasError)
-                                return Center(
-                                    child: Text(snap.error.toString()));
-                              if (snap.data.comments?.isEmpty ?? true)
-                                return Center(child: Text("No comments"));
-                              return Column(
-                                children: snap.data.comments
-                                    .map((comment) => CommentRow(
-                                          userId: comment.idUser,
-                                          username: comment.userInfo,
-                                          comment: comment.textComment,
-                                        ))
-                                    .toList(),
-                              );
-                            },
-                          ),
+                          _buildComments(),
                         ],
                       ),
                     ),

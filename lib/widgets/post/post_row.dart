@@ -30,7 +30,7 @@ class PostRow extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserImage(userId: 23, size: 40),
+                  UserImage(imageUrl: post.authorPost.photoUser, size: 40),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(

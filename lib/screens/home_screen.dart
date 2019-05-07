@@ -48,14 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24.0),
             Center(
               child: UserImage(
-                userId: user.idUser,
+                imageUrl: user.photoUser,
                 size: 125,
                 elevation: 2.0,
               ),
             ),
             const SizedBox(height: 16.0),
             Text(
-              "${user.firstNameUser} ${user.lastNameUser}",
+              user.userInfo,
               style: Theme.of(context).textTheme.subhead,
               textAlign: TextAlign.center,
             ),
