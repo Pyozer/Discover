@@ -1,4 +1,6 @@
 import 'package:discover/models/comments/comments_response.dart';
+import 'package:discover/models/fetch_data.dart';
+import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
@@ -18,13 +20,35 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-  Future<PostsResponse> _fetchPost() async {
-    final prefs = PreferencesProvider.of(context);
-    return await Api().getPost(
-      widget.postId,
-      prefs.getUserPos(),
-      prefs.getUser()?.tokenUser,
-    );
+  FetchData<Post> _fetch = FetchData<Post>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchPost();
+  }
+
+  Future<void> _fetchPost() async {
+    setState(() {
+      _fetch.isLoading = true;
+    });
+
+    try {
+      final prefs = PreferencesProvider.of(context);
+      final response = await Api().getPost(
+        widget.postId,
+        prefs.getUserPos(),
+        prefs.getUser()?.tokenUser,
+      );
+
+      _fetch.data = response.posts?.first;
+    } catch (e) {
+      _fetch.error = e;
+    }
+
+    setState(() {
+      _fetch.isLoading = false;
+    });
   }
 
   Future<CommentsResponse> _fetchComment() async {
@@ -33,6 +57,19 @@ class _PostScreenState extends State<PostScreen> {
       widget.postId,
       prefs.getUser()?.tokenUser,
     );
+  }
+
+  Future<void> _togglePostLike() async {
+    setState(() {
+      _fetch.data.likesPost += _fetch.data.isUserLike == 1 ? -1 : 1;
+      _fetch.data.isUserLike = _fetch.data.isUserLike == 1 ? 0 : 1;
+    });
+    final prefs = PreferencesProvider.of(context);
+    await Api().likePost(
+      widget.postId,
+      prefs.getUser()?.tokenUser,
+    );
+    _fetchPost();
   }
 
   Widget _buildHeaderIcon({
@@ -64,125 +101,78 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContent() {
     final screenSize = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      body: FutureBuilder<PostsResponse>(
-        future: _fetchPost(),
-        builder: (context, snap) {
-          if (!snap.hasData) return Center(child: CircularProgressIndicator());
-          if (snap.hasError) return Center(child: Text(snap.error.toString()));
-          if (snap.data.posts?.isEmpty ?? true)
-            return Center(child: Text("Empty"));
-          final post = snap.data.posts.first;
+    if (!_fetch.hasData && _fetch.isLoading)
+      return Center(child: CircularProgressIndicator());
+    if (_fetch.hasError) return Center(child: Text(_fetch.error.toString()));
+    if (!_fetch.hasData) return Center(child: Text("Empty"));
+    final post = _fetch.data;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Stack(
+          children: [
+            Image.network(
+              post.photoPost,
+              fit: BoxFit.cover,
+              height: screenSize.height / 3.5,
+              width: screenSize.width,
+            ),
+            AppBar(elevation: 0, backgroundColor: Colors.transparent),
+          ],
+        ),
+        Expanded(
+          child: Stack(
             children: [
-              Stack(
-                children: [
-                  Image.network(
-                    post.photoPost,
-                    fit: BoxFit.cover,
-                    height: screenSize.height / 3.5,
-                    width: screenSize.width,
-                  ),
-                  AppBar(elevation: 0, backgroundColor: Colors.transparent),
-                ],
-              ),
-              Expanded(
-                child: Stack(
+              Positioned(
+                top: 130,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: ListView(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 0),
                   children: [
-                    Positioned(
-                      top: 130,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: ListView(
-                        padding: const EdgeInsets.only(top: 10.0, bottom: 0),
+                    CustomCard(
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      radius: 0.0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          CustomCard(
-                            margin: EdgeInsets.only(bottom: 10.0),
-                            radius: 0.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  children: [
-                                    UserImage(
-                                      userId: post.authorPost.idUser,
-                                      size: 50,
-                                    ),
-                                    const SizedBox(width: 16.0),
-                                    Expanded(
-                                      child: Text(
-                                        post.authorPost.firstNameUser +
-                                            " " +
-                                            post.authorPost.lastNameUser,
-                                        style: const TextStyle(fontSize: 18.0),
-                                      ),
-                                    ),
-                                  ],
+                          Row(
+                            children: [
+                              UserImage(
+                                userId: post.authorPost.idUser,
+                                size: 50,
+                              ),
+                              const SizedBox(width: 16.0),
+                              Expanded(
+                                child: Text(
+                                  post.authorPost.firstNameUser +
+                                      " " +
+                                      post.authorPost.lastNameUser,
+                                  style: const TextStyle(fontSize: 18.0),
                                 ),
-                                const SizedBox(height: 20.0),
-                                Text("Description", style: textTheme.caption),
-                                const SizedBox(height: 8.0),
-                                Text(post.contentPost),
-                                const SizedBox(height: 20.0),
-                                Text("Tags", style: textTheme.caption),
-                                const SizedBox(height: 4.0),
-                                Wrap(
-                                  spacing: 8.0,
-                                  runSpacing: -5.0,
-                                  children: post.tags
-                                      .map((t) => _buildChip(t.nomTag))
-                                      .toList(),
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          CustomCard(
-                            radius: 0.0,
-                            padding: EdgeInsets.all(0.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 16, 16, 4),
-                                  child: Text(
-                                    "Commentaires".toUpperCase(),
-                                    style: textTheme.caption,
-                                  ),
-                                ),
-                                FutureBuilder<CommentsResponse>(
-                                  future: _fetchComment(),
-                                  builder: (context, snap) {
-                                    if (!snap.hasData)
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    if (snap.hasError)
-                                      return Center(
-                                          child: Text(snap.error.toString()));
-                                    if (snap.data.comments?.isEmpty ?? true)
-                                      return Center(child: Text("No comments"));
-                                    return Column(
-                                      children: snap.data.comments
-                                          .map((comment) => CommentRow(
-                                                userId: comment.idUser,
-                                                username: comment.userInfo,
-                                                comment: comment.textComment,
-                                              ))
-                                          .toList(),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                          const SizedBox(height: 20.0),
+                          Text("Description", style: textTheme.caption),
+                          const SizedBox(height: 8.0),
+                          Text(post.contentPost),
+                          const SizedBox(height: 20.0),
+                          Text("Tags", style: textTheme.caption),
+                          const SizedBox(height: 4.0),
+                          Wrap(
+                            spacing: 8.0,
+                            runSpacing: -5.0,
+                            children: post.tags
+                                .map((t) => _buildChip(t.nomTag))
+                                .toList(),
+                          )
                         ],
                       ),
                     ),
@@ -191,40 +181,79 @@ class _PostScreenState extends State<PostScreen> {
                       padding: EdgeInsets.all(0.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            color: Colors.grey[200],
-                            padding: const EdgeInsets.all(12.0),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                             child: Text(
-                              "Posted ${post.dateAgo}",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey[600]),
+                              "Commentaires".toUpperCase(),
+                              style: textTheme.caption,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildHeaderIcon(
-                                  icon: Icons.favorite,
-                                  color: Colors.red[600],
-                                  text: "${post.likesPost} likes",
-                                  onTap: () {},
-                                ),
-                                _buildHeaderIcon(
-                                  icon: Icons.mode_comment,
-                                  text: "${post.commentsPost} comments",
-                                  onTap: () {},
-                                ),
-                                _buildHeaderIcon(
-                                  icon: Icons.directions,
-                                  text: post.distanceStr,
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
+                          FutureBuilder<CommentsResponse>(
+                            future: _fetchComment(),
+                            builder: (context, snap) {
+                              if (!snap.hasData)
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              if (snap.hasError)
+                                return Center(
+                                    child: Text(snap.error.toString()));
+                              if (snap.data.comments?.isEmpty ?? true)
+                                return Center(child: Text("No comments"));
+                              return Column(
+                                children: snap.data.comments
+                                    .map((comment) => CommentRow(
+                                          userId: comment.idUser,
+                                          username: comment.userInfo,
+                                          comment: comment.textComment,
+                                        ))
+                                    .toList(),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              CustomCard(
+                radius: 0.0,
+                padding: EdgeInsets.all(0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      color: Colors.grey[200],
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        "Posted ${post.dateAgo}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildHeaderIcon(
+                            icon: Icons.favorite,
+                            color:
+                                post.isUserLike == 1 ? Colors.red[600] : null,
+                            text: "${post.likesPost} likes",
+                            onTap: _togglePostLike,
+                          ),
+                          _buildHeaderIcon(
+                            icon: Icons.mode_comment,
+                            text: "${post.commentsPost} comments",
+                            onTap: () {},
+                          ),
+                          _buildHeaderIcon(
+                            icon: Icons.directions,
+                            text: post.distanceStr,
+                            onTap: () {},
                           ),
                         ],
                       ),
@@ -233,9 +262,14 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: _buildContent());
   }
 }
