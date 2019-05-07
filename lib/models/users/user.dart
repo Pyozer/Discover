@@ -17,6 +17,8 @@ class User {
     this.photoUser,
   });
 
+  String get userInfo => "$firstNameUser $lastNameUser";
+  
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
   factory User.fromJson(Map<String, dynamic> json) => User(

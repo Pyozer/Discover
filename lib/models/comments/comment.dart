@@ -21,6 +21,8 @@ class Comment {
     this.photoUser,
   });
 
+  String get userInfo => "$firstNameUser $lastNameUser";
+  
   factory Comment.fromRawJson(String str) => Comment.fromJson(json.decode(str));
 
   factory Comment.fromJson(Map<String, dynamic> json) => new Comment(

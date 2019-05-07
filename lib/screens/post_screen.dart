@@ -1,3 +1,4 @@
+import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
@@ -22,6 +23,14 @@ class _PostScreenState extends State<PostScreen> {
     return await Api().getPost(
       widget.postId,
       prefs.getUserPos(),
+      prefs.getUser()?.tokenUser,
+    );
+  }
+
+  Future<CommentsResponse> _fetchComment() async {
+    final prefs = PreferencesProvider.of(context);
+    return await Api().getComments(
+      widget.postId,
       prefs.getUser()?.tokenUser,
     );
   }
@@ -149,11 +158,27 @@ class _PostScreenState extends State<PostScreen> {
                                     style: textTheme.caption,
                                   ),
                                 ),
-                                CommentRow(
-                                  userId: 23,
-                                  username: "Albert Reporter",
-                                  comment:
-                                      "Un super commentaire vraiment utile !",
+                                FutureBuilder<CommentsResponse>(
+                                  future: _fetchComment(),
+                                  builder: (context, snap) {
+                                    if (!snap.hasData)
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    if (snap.hasError)
+                                      return Center(
+                                          child: Text(snap.error.toString()));
+                                    if (snap.data.comments?.isEmpty ?? true)
+                                      return Center(child: Text("No comments"));
+                                    return Column(
+                                      children: snap.data.comments
+                                          .map((comment) => CommentRow(
+                                                userId: comment.idUser,
+                                                username: comment.userInfo,
+                                                comment: comment.textComment,
+                                              ))
+                                          .toList(),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
