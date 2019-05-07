@@ -73,7 +73,7 @@ class PostRow extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       LikeButton(
-                        isLike: post.isUserLike == 1,
+                        isLike: post.isUserLike,
                         postId: post.idPost,
                         likesCount: post.likesPost,
                         isSmall: true,
