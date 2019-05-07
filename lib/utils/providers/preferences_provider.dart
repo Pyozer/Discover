@@ -1,3 +1,4 @@
+import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/prefkey.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class PreferencesProviderState extends State<PreferencesProvider> {
   bool _isPrefInit = false;
   bool _isLogin = false;
   Position _userPosition;
-  String _authToken;
+  User _user;
 
   bool isLogin() => _isLogin ?? false;
 
@@ -54,11 +55,11 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     );
   }
 
-  String authToken() => _authToken;
+  User getUser() => _user;
 
-  void setAuthToken(String authToken, [bool state = false]) {
-    _setPref(() => _authToken = authToken, state);
-    widget.prefs.setString(PrefKey.authToken, authToken);
+  void setUser(User user, [bool state = false]) {
+    _setPref(() => _user = user, state);
+    widget.prefs.setString(PrefKey.user, user.toRawJson());
   }
 
   void initPreferences() {
@@ -67,7 +68,10 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     /*_userPosition = stringToPosition(
       widget.prefs.getString(PrefKey.lastUserPos),
     );*/
-    _authToken = widget.prefs.getString(PrefKey.authToken);
+    String userJson = widget.prefs.getString(PrefKey.user);
+    if (userJson != null) {
+      _user = User.fromRawJson(userJson);
+    }
     _isPrefInit = true;
   }
 

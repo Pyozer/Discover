@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class LoginResponse {
+class User {
   String tokenUser;
   int idUser;
   String firstNameUser;
@@ -8,7 +8,7 @@ class LoginResponse {
   String emailUser;
   String photoUser;
 
-  LoginResponse({
+  User({
     this.tokenUser,
     this.idUser,
     this.firstNameUser,
@@ -17,10 +17,9 @@ class LoginResponse {
     this.photoUser,
   });
 
-  factory LoginResponse.fromRawJson(String str) =>
-      LoginResponse.fromJson(json.decode(str));
+  factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+  factory User.fromJson(Map<String, dynamic> json) => User(
         tokenUser: json["token_user"],
         idUser: json["id_user"],
         firstNameUser: json["first_name_user"],
@@ -28,4 +27,15 @@ class LoginResponse {
         emailUser: json["email_user"],
         photoUser: json["photo_user"],
       );
+
+  String toRawJson() => json.encode(toJson());
+
+  Map<String, dynamic> toJson() => {
+        "token_user": tokenUser,
+        "id_user": idUser,
+        "first_name_user": firstNameUser,
+        "last_name_user": lastNameUser,
+        "email_user": emailUser,
+        "photo_user": photoUser
+      };
 }

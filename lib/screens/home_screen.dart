@@ -1,6 +1,7 @@
 import 'package:discover/screens/add_post_screen.dart';
 import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
+import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/list/main_post_list.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = PreferencesProvider.of(context).getUser();
     return Scaffold(
       appBar: AppBar(
         title: Text("Discover"),
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16.0),
             Text(
-              "FirstName LastName",
+              "${user.firstNameUser} ${user.lastNameUser}",
               style: Theme.of(context).textTheme.subhead,
               textAlign: TextAlign.center,
             ),
