@@ -2,9 +2,9 @@ import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
 
 class CommentRow extends StatelessWidget {
-  final int userId; // TODO: Use 'User' model
-  final String username; // TODO: Use 'User' model
-  final String comment; // TODO: Use 'Comment' model
+  final int userId;
+  final String username; 
+  final String comment; 
 
   const CommentRow({Key key, this.userId, this.username, this.comment})
       : super(key: key);
@@ -24,11 +24,11 @@ class CommentRow extends StatelessWidget {
               children: [
                 Text(
                   username,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 13),
                   maxLines: 1,
                 ),
                 const SizedBox(height: 6.0),
-                Text(comment, style: TextStyle(color: Colors.grey[600])),
+                Text(comment, style: TextStyle(color: Colors.grey[700])),
               ],
             ),
           ),
