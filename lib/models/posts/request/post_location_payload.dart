@@ -1,20 +1,20 @@
 class PostsLocationPayload {
-  double latitudeUser;
-  double longitudeUser;
-  int distanceUser;
+  double latitude;
+  double longitude;
+  int distance;
   List<String> tags;
 
   PostsLocationPayload({
-    this.latitudeUser,
-    this.longitudeUser,
-    this.distanceUser,
+    this.latitude,
+    this.longitude,
+    this.distance,
     this.tags,
   });
 
-  Map<String, dynamic> toJson() => {
-        "latitude_user": latitudeUser,
-        "longitude_user": longitudeUser,
-        "distance_user": distanceUser,
-        "tags": tags.isEmpty ? ["-1"] : tags,
+  Map<String, String> toJson() => {
+        "latitude_user": latitude?.toString(),
+        "longitude_user": longitude?.toString(),
+        "distance": distance?.toString(),
+        "tags": (tags?.isEmpty ?? true) ? "-1" : tags.join(','),
       };
 }

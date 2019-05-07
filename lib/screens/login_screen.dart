@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 
-
 enum Field { FIRSTNAME, LASTNAME, EMAIL, PASSWORD, PWDCONFIRM }
 
 class LoginScreen extends StatefulWidget {

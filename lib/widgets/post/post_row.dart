@@ -1,3 +1,4 @@
+import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
 import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -8,11 +9,14 @@ enum MenuPost { report }
 const img = "http://images.unsplash.com/photo-1555985202-12975b0235dc";
 
 class PostRow extends StatelessWidget {
-  const PostRow({Key key}) : super(key: key);
+  final Post post;
+
+  const PostRow({Key key, this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final author = post.authorPost;
 
     return Card(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -25,14 +29,14 @@ class PostRow extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserImage(userId: "fdghj-dfgh-dfgh-fdgh", size: 40),
+                  UserImage(userId: 23, size: 40),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          "Username",
+                          "${author.firstNameUser} ${author.lastNameUser}",
                           style: textTheme.title.copyWith(fontSize: 15.0),
                         ),
                         const SizedBox(height: 6.0),
@@ -40,7 +44,7 @@ class PostRow extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text("21 hours ago", style: textTheme.caption),
+                  Text(post.datePost.toString(), style: textTheme.caption),
                 ],
               ),
             ),
@@ -70,7 +74,7 @@ class PostRow extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(width: 10.0),
-                      Text("0")
+                      Text(post.likesPost.toString())
                     ],
                   ),
                 ),
@@ -84,7 +88,7 @@ class PostRow extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(width: 10.0),
-                      Text("0")
+                      Text(post.commentsPost.toString())
                     ],
                   ),
                 ),

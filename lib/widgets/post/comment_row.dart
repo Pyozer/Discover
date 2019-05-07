@@ -2,7 +2,7 @@ import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
 
 class CommentRow extends StatelessWidget {
-  final String userId; // TODO: Use 'User' model
+  final int userId; // TODO: Use 'User' model
   final String username; // TODO: Use 'User' model
   final String comment; // TODO: Use 'Comment' model
 

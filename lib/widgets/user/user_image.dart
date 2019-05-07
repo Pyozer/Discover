@@ -2,7 +2,7 @@ import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:flutter/material.dart';
 
 class UserImage extends StatelessWidget {
-  final String userId;
+  final int userId;
   final double size;
   final double elevation;
 

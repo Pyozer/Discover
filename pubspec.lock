@@ -48,6 +48,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_amazon_s3:
+    dependency: "direct main"
+    description:
+      name: flutter_amazon_s3
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
   flutter_svg:
     dependency: "direct main"
     description:

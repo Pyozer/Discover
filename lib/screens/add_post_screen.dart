@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_amazon_s3/flutter_amazon_s3.dart';
 
 enum Position { GPS, CUSTOM }
 
@@ -19,23 +20,49 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   File _image;
-  List<String> _tags = [
-    "Cascade",
-    "Monument",
-    "Plage",
-    "Nature",
-    "Musée",
-    "Bibliothèque",
-    "Statue",
-    "Lieu culte",
-    "Mairie",
-    "Château",
-    "Ruine",
-    "Boutique",
-    "Restaurant",
-  ];
+  List<String> _tags = [];
   List<String> _selectedTags = [];
   Position _positionType = Position.GPS;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchTags();
+  }
+
+  void _fetchTags() async {
+    setState(() {
+      _tags = [
+        "Cascade",
+        "Monument",
+        "Plage",
+        "Nature",
+        "Musée",
+        "Bibliothèque",
+        "Statue",
+        "Lieu culte",
+        "Mairie",
+        "Château",
+        "Ruine",
+        "Boutique",
+        "Restaurant",
+      ];
+    });
+  }
+
+  Future<String> _uploadImage() async {
+    /*String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
+      _image.path,
+      BUCKET_NAME,
+      IDENTITY_POOL_ID,
+    );*/
+    return "http://images.unsplash.com/photo-1555985202-12975b0235dc";
+  }
+
+  Future<void> _sendPost() async {
+    String imageUrl = await _uploadImage();
+
+  }
 
   Future _openGalleryCamera() async {
     ImageSource source = await showDialog(
@@ -72,10 +99,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Future _openTagDialog() async {
     List<String> newTags = await showDialog<List<String>>(
       context: context,
-      builder: (_) => TagsDialog(
-            tags: _tags,
-            selectedTags: _selectedTags,
-          ),
+      builder: (_) => TagsDialog(tags: _tags, selectedTags: _selectedTags),
     );
     if (newTags != null) setState(() => _selectedTags = newTags);
   }
