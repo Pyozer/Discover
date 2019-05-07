@@ -1,5 +1,6 @@
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
+import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
@@ -71,12 +72,12 @@ class PostRow extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        child: Icon(Icons.favorite, color: Colors.grey[800]),
-                        onTap: () {},
+                      LikeButton(
+                        isLike: post.isUserLike == 1,
+                        postId: post.idPost,
+                        likesCount: post.likesPost,
+                        isSmall: true,
                       ),
-                      const SizedBox(width: 10.0),
-                      Text(post.likesPost.toString())
                     ],
                   ),
                 ),
