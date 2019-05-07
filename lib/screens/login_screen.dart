@@ -349,7 +349,7 @@ class _LoginPageState extends State<LoginScreen>
       User response = await Api().login(
         LoginPayload(email: email, password: pwd),
       );
-      PreferencesProvider.of(context).setAuthToken(response.tokenUser);
+      PreferencesProvider.of(context).setUser(response);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -389,7 +389,7 @@ class _LoginPageState extends State<LoginScreen>
         firstName: firstName,
         lastName: lastName,
       ));
-      PreferencesProvider.of(context).setAuthToken(response.tokenUser);
+      PreferencesProvider.of(context).setUser(response);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => HomeScreen()),
