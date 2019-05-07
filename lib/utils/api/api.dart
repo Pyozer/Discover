@@ -42,24 +42,40 @@ class Api extends BaseApi {
     return PostsResponse.fromJson(getWithBaseData(response));
   }
 
+  /// Get posts on map
+  Future<PostsResponse> getPostsMaps(String token) async {
+    final response = await httpGet(getUrl("/posts/map"), token: token);
+    return PostsResponse.fromJson(getWithBaseData(response));
+  }
+
   /// Get post
   Future<PostsResponse> getPost(int id, Position userPos, String token) async {
-    final response = await httpGet(getUrl("/posts/$id", {
-      'latitude_user': userPos.latitude.toString(),
-      'longitude_user': userPos.longitude.toString(),
-    }), token: token);
+    final response = await httpGet(
+      getUrl("/posts/$id", {
+        'latitude_user': userPos.latitude.toString(),
+        'longitude_user': userPos.longitude.toString(),
+      }),
+      token: token,
+    );
     return PostsResponse.fromJson(getWithBaseData(response));
   }
 
   /// Add new post
   Future<PostsResponse> addPost(PostPayload payload, String token) async {
-    final response = await httpPost(getUrl("/posts"), token: token, body: payload.toRawJson());
+    final response = await httpPost(
+      getUrl("/posts"),
+      token: token,
+      body: payload.toRawJson(),
+    );
     return PostsResponse.fromJson(getWithBaseData(response));
   }
 
   /// Get comment
   Future<CommentsResponse> getComments(int idPost, String token) async {
-    final response = await httpGet(getUrl("/posts/$idPost/comments"), token: token);
+    final response = await httpGet(
+      getUrl("/posts/$idPost/comments"),
+      token: token,
+    );
     return CommentsResponse.fromJson(getWithBaseData(response));
   }
 }

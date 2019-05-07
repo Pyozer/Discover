@@ -1,3 +1,6 @@
+import 'package:discover/models/posts/post.dart';
+import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -8,22 +11,41 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  List<Post> _posts = [];
+
   final kPosition = CameraPosition(
     target: LatLng(48.7886906, 2.3637846),
     zoom: 14,
   );
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchPost();
+  }
+
+  Future<void> _fetchPost() async {
+    final prefs = PreferencesProvider.of(context);
+    final res = await Api().getPostsMaps(prefs.getUser()?.tokenUser);
+    setState(() => _posts = res.posts ?? []);
+  }
+
+  Marker _buildMarker(Post post) {
+    return Marker(
+      position: LatLng(post.latitudePost, post.longitudePost),
+      markerId: MarkerId("${post.idPost}"),
+      infoWindow: InfoWindow(
+        title: "Post by ${post.authorPost.userInfo}",
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GoogleMap(
       mapType: MapType.normal,
       myLocationEnabled: true,
-      markers: Set.from([
-        Marker(
-          position: kPosition.target,
-          markerId: MarkerId("test")
-        ),
-      ]),
+      markers: _posts.map(_buildMarker).toSet(),
       initialCameraPosition: kPosition,
       onMapCreated: (GoogleMapController controller) {},
     );

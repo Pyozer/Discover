@@ -16,5 +16,5 @@ class PostsLocationPayload {
         "longitude_user": longitude?.toString(),
         "distance": distance?.toString(),
         "tags": tags?.join(','),
-      };
+      }..removeWhere((_, val) => val == null);
 }

@@ -1,6 +1,5 @@
 import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/posts/posts_response.dart';
-import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/comment_row.dart';
