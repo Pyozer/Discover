@@ -29,6 +29,8 @@ bool isEmail(String email) {
 }
 
 String getTimeAgo(DateTime time) {
+  if (time == null) return "";
+
   final diff = DateTime.now().difference(time);
   if (diff.inSeconds < 60) return "${diff.inSeconds} sec ago";
   if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
@@ -46,4 +48,7 @@ String getTimeAgo(DateTime time) {
   return "$years year${years > 1 ? "s" : ""} ago";
 }
 
-String getDistance(double distance) => distance < 1000 ?  "$distance m" :  "${distance ~/1000} km";
+String getDistance(double distance) {
+  if (distance == null) return "";
+  return distance < 1000 ? "$distance m" : "${distance ~/ 1000} km";
+}
