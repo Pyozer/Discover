@@ -225,12 +225,11 @@ class _PostScreenState extends State<PostScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           LikeButton(
-                            isLike: post.isUserLike == 1,
+                            isLike: post.isUserLike,
                             postId: post.idPost,
                             likesCount: post.likesPost,
                             onTap: (isLike) {
-                              setState(() =>
-                                  _fetch.data.isUserLike = isLike ? 1 : 0);
+                              setState(() => _fetch.data.isUserLike = isLike);
                             },
                             onDone: (_) {
                               _fetchPost();

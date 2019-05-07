@@ -13,7 +13,7 @@ class Post {
   double longitudePost;
   int likesPost;
   int commentsPost;
-  int isUserLike;
+  bool isUserLike;
   User authorPost;
   List<Tag> tags;
 
