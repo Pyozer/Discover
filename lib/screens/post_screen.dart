@@ -1,3 +1,4 @@
+import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
@@ -22,6 +23,14 @@ class _PostScreenState extends State<PostScreen> {
     return await Api().getPost(
       widget.postId,
       prefs.getUserPos(),
+      prefs.getUser()?.tokenUser,
+    );
+  }
+
+ Future<CommentsResponse> _fetchComment() async {
+    final prefs = PreferencesProvider.of(context);
+    return await Api().getComments(
+      widget.postId,
       prefs.getUser()?.tokenUser,
     );
   }
