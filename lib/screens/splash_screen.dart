@@ -1,5 +1,6 @@
 import 'package:discover/screens/home_screen.dart';
 import 'package:discover/screens/login_screen.dart';
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -56,10 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
           const Expanded(child: SizedBox.shrink()),
           Expanded(
             child: Center(
-              child: SvgPicture.asset(
-                'assets/images/logo.svg',
-                width: 180,
-              ),
+              child: SvgPicture.asset(AssetKey.logoSvg, width: 180),
             ),
           ),
           Expanded(

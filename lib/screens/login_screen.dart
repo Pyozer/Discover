@@ -4,6 +4,7 @@ import 'package:discover/models/users/user.dart';
 import 'package:discover/screens/home_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/ui/tab_indicator_painter.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,7 @@ class _LoginPageState extends State<LoginScreen>
           child: Column(
             children: [
               const SizedBox(height: 75),
-              SvgPicture.asset(
-                'assets/images/logo.svg',
-                height: 200,
-              ),
+              SvgPicture.asset(AssetKey.logoSvg, height: 200),
               const SizedBox(height: 32),
               _buildMenuBar(context),
               const SizedBox(height: 22),

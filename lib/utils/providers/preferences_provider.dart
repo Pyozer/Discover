@@ -1,6 +1,6 @@
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/functions.dart';
-import 'package:discover/utils/keys/prefkey.dart';
+import 'package:discover/utils/keys/pref_key.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';

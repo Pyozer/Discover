@@ -1,3 +1,4 @@
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class UserImage extends StatelessWidget {
       imageUrl: imageUrl,
       size: Size.square(size),
       elevation: elevation,
-      placeholder: "assets/images/placeholder_user.jpg",
+      placeholder: AssetKey.placeholderUser,
     );
   }
 }

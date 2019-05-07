@@ -14,4 +14,10 @@ class Tag {
       Tag(id: json["id_tag"], name: json["nom_tag"]);
 
   Map<String, dynamic> toJson() => {"id_tag": id, "nom_tag": name};
+
+  @override
+  bool operator==(dynamic other) => other is Tag && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

@@ -1,3 +1,4 @@
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:flutter/material.dart';
 
 class RoundedImage extends StatelessWidget {
@@ -10,7 +11,7 @@ class RoundedImage extends StatelessWidget {
   const RoundedImage({
     Key key,
     @required this.imageUrl,
-    this.placeholder = "assets/images/placeholder_user.jpg",
+    this.placeholder = AssetKey.placeholderUser,
     this.radius = 100,
     this.elevation = 0,
     @required this.size,

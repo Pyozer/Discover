@@ -1,5 +1,11 @@
 import 'dart:io';
 
+import 'package:discover/models/posts/request/post_payload.dart';
+import 'package:discover/models/tags/tag.dart';
+import 'package:discover/screens/post_screen.dart';
+import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/keys/asset_key.dart';
+import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/tags_dialog.dart';
 import 'package:discover/widgets/ui/btn_colored.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
@@ -20,9 +26,11 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   File _image;
-  List<String> _tags = [];
-  List<String> _selectedTags = [];
+  String _description = "";
+  String _additionalInfo = "";
   Position _positionType = Position.GPS;
+  List<Tag> _tags = [];
+  List<Tag> _selectedTags = [];
 
   @override
   void didChangeDependencies() {
@@ -31,23 +39,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void _fetchTags() async {
-    setState(() {
-      _tags = [
-        "Cascade",
-        "Monument",
-        "Plage",
-        "Nature",
-        "Musée",
-        "Bibliothèque",
-        "Statue",
-        "Lieu culte",
-        "Mairie",
-        "Château",
-        "Ruine",
-        "Boutique",
-        "Restaurant",
-      ];
-    });
+    final tagsRes = await Api().getTags();
+    setState(() => _tags = tagsRes.tags);
   }
 
   Future<String> _uploadImage() async {
@@ -61,6 +54,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> _sendPost() async {
     String imageUrl = await _uploadImage();
+    final prefs = PreferencesProvider.of(context);
+    final response = await Api().addPost(
+      PostPayload(
+        imageUrl: imageUrl,
+        content: _description,
+        latitude: prefs.getUserPos().latitude,
+        longitude: prefs.getUserPos().longitude,
+        tags: _selectedTags,
+      ),
+      prefs.getUser()?.token,
+    );
+    if ((response.posts?.first?.id ?? null) != null)
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => PostScreen(postId: response.posts.first.id),
+      ));
+    else
+      Navigator.of(context).pop();
   }
 
   Future _openGalleryCamera() async {
@@ -96,7 +106,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future _openTagDialog() async {
-    List<String> newTags = await showDialog<List<String>>(
+    List<Tag> newTags = await showDialog<List<Tag>>(
       context: context,
       builder: (_) => TagsDialog(tags: _tags, selectedTags: _selectedTags),
     );
@@ -106,6 +116,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -134,7 +145,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       children: [
                         _image == null
                             ? Image.asset(
-                                "assets/images/placeholder_post.png",
+                                AssetKey.placeholderPost,
                                 fit: BoxFit.cover,
                               )
                             : Image.file(_image, fit: BoxFit.cover),
@@ -143,7 +154,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           right: 16,
                           child: FloatingActionButton(
                             heroTag: "AddCamera",
-                            child: Icon(Icons.add_a_photo),
+                            child: const Icon(Icons.add_a_photo),
                             onPressed: _openGalleryCamera,
                           ),
                         )
@@ -157,24 +168,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text("Description",
-                          style: Theme.of(context).textTheme.caption),
+                      Text("Description", style: textTheme.caption),
                       TextField(
                         maxLines: 7,
                         minLines: 4,
                         keyboardType: TextInputType.multiline,
                         maxLength: 1000,
                         maxLengthEnforced: false,
+                        onChanged: (value) {
+                          setState(() => _description = value);
+                        },
                       ),
                       const SizedBox(height: 10),
-                      Text("Additional informations",
-                          style: Theme.of(context).textTheme.caption),
+                      Text("Additional informations", style: textTheme.caption),
                       TextField(
                         maxLines: 6,
                         minLines: 2,
                         keyboardType: TextInputType.multiline,
                         maxLength: 500,
                         maxLengthEnforced: false,
+                        onChanged: (value) {
+                          setState(() => _additionalInfo = value);
+                        },
                       ),
                     ],
                   ),
@@ -233,7 +248,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           (i) {
                             return Chip(
                               label: Text(
-                                _selectedTags[i],
+                                _selectedTags[i].name,
                                 style: const TextStyle(color: Colors.white),
                               ),
                               onDeleted: () {
@@ -266,9 +281,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Send post
-        },
+        onPressed: _sendPost,
         icon: const Icon(Icons.send),
         label: Text("Send post"),
       ),

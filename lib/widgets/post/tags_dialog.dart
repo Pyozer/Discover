@@ -1,11 +1,12 @@
+import 'package:discover/models/tags/tag.dart';
 import 'package:discover/widgets/ui/btn_colored.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
 import 'package:discover/widgets/ui/flat_btn_rounded.dart';
 import 'package:flutter/material.dart';
 
 class TagsDialog extends StatefulWidget {
-  final List<String> tags;
-  final List<String> selectedTags;
+  final List<Tag> tags;
+  final List<Tag> selectedTags;
 
   TagsDialog({
     Key key,
@@ -17,7 +18,7 @@ class TagsDialog extends StatefulWidget {
 }
 
 class _TagsDialogState extends State<TagsDialog> {
-  List<String> _selectedTags;
+  List<Tag> _selectedTags;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _TagsDialogState extends State<TagsDialog> {
                     });
                   },
                   value: _selectedTags.contains(tag),
-                  title: Text(tag),
+                  title: Text(tag.name),
                 );
               },
             ),

@@ -3,6 +3,7 @@ import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/post/comment_row.dart';
@@ -128,7 +129,7 @@ class _PostScreenState extends State<PostScreen> {
               fit: BoxFit.cover,
               height: screenSize.height / 3.5,
               width: screenSize.width,
-              placeholder: "assets/images/placeholder_post.png",
+              placeholder: AssetKey.placeholderPost,
             ),
             AppBar(elevation: 0, backgroundColor: Colors.transparent),
           ],

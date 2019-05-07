@@ -1,5 +1,6 @@
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
+import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class PostRow extends StatelessWidget {
             child: FadeInImage.assetNetwork(
               image: post.photo,
               height: 250,
-              placeholder: "assets/images/placeholder_post.png",
+              placeholder: AssetKey.placeholderPost,
               fit: BoxFit.cover,
             ),
           ),

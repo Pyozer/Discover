@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:discover/models/tags/tag.dart';
+
 class PostPayload {
   String content;
   String imageUrl;
   double latitude;
   double longitude;
-  List<String> tags;
+  List<Tag> tags;
 
   PostPayload({
     this.content,
@@ -22,6 +24,6 @@ class PostPayload {
         "image_url": imageUrl,
         "latitude_post": latitude?.toString(),
         "longitude_post": longitude?.toString(),
-        "tags_post": tags,
+        "tags_post": "[" + tags.map((x) => x.id).join(',') + "]",
       };
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/likes/like_response.dart';
 import 'package:discover/models/posts/request/post_payload.dart';
+import 'package:discover/models/tags/tags_response.dart';
 import 'package:discover/models/users/request/login_payload.dart';
 import 'package:discover/models/users/request/register_payload.dart';
 import 'package:discover/models/users/user.dart';
@@ -71,6 +72,12 @@ class Api extends BaseApi {
     return PostsResponse.fromJson(getWithBaseData(response));
   }
 
+  /// Get tags
+  Future<TagsResponse> getTags() async {
+    final response = await httpGet(getUrl("/tags"));
+    return TagsResponse.fromJson(getWithBaseData(response));
+  }
+
   /// Get comment
   Future<CommentsResponse> getComments(int idPost, String token) async {
     final response = await httpGet(
@@ -82,7 +89,8 @@ class Api extends BaseApi {
 
   /// Add like
   Future<LikeResponse> likePost(int idPost, String token) async {
-    final response = await httpPost(getUrl("/posts/$idPost/likes"), token: token);
+    final response =
+        await httpPost(getUrl("/posts/$idPost/likes"), token: token);
     return LikeResponse.fromJson(getWithBaseData(response));
   }
 }
