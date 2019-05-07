@@ -40,7 +40,7 @@ class PostRow extends StatelessWidget {
                           style: textTheme.title.copyWith(fontSize: 15.0),
                         ),
                         const SizedBox(height: 6.0),
-                        Text("150m", style: textTheme.caption)
+                        Text(post.distanceStr, style: textTheme.caption)
                       ],
                     ),
                   ),
@@ -52,7 +52,9 @@ class PostRow extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => PostScreen(postId: post.idPost)),
+                MaterialPageRoute(
+                  builder: (_) => PostScreen(postId: post.idPost),
+                ),
               );
             },
             child: RoundedImage(
@@ -83,8 +85,10 @@ class PostRow extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        child:
-                            Icon(Icons.mode_comment, color: Colors.grey[800]),
+                        child: Icon(
+                          Icons.mode_comment,
+                          color: Colors.grey[800],
+                        ),
                         onTap: () {},
                       ),
                       const SizedBox(width: 10.0),

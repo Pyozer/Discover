@@ -128,13 +128,9 @@ class _PostScreenState extends State<PostScreen> {
                                 Wrap(
                                   spacing: 8.0,
                                   runSpacing: -5.0,
-                                  children: [
-                                    _buildChip("Monument"),
-                                    _buildChip("Paysage"),
-                                    _buildChip("Randonnée"),
-                                    _buildChip("Plage"),
-                                    _buildChip("Visite"),
-                                  ],
+                                  children: post.tags
+                                      .map((t) => _buildChip(t.nomTag))
+                                      .toList(),
                                 )
                               ],
                             ),

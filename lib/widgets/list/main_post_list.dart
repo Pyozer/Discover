@@ -19,8 +19,8 @@ class MainPostListState extends State<MainPostList> {
     final prefs = PreferencesProvider.of(context);
     final response = await Api().getPostByLocation(
       PostsLocationPayload(
-        latitude: 48.6470509,
-        longitude: 48.6470509,
+        latitude: prefs.getUserPos().latitude,
+        longitude: prefs.getUserPos().longitude,
         distance: 200000,
         tags: [],
       ),
