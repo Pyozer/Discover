@@ -1,10 +1,9 @@
 import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
-import 'package:discover/models/posts/posts_response.dart';
-import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/post/comment_row.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -57,19 +56,6 @@ class _PostScreenState extends State<PostScreen> {
       widget.postId,
       prefs.getUser()?.tokenUser,
     );
-  }
-
-  Future<void> _togglePostLike() async {
-    setState(() {
-      _fetch.data.likesPost += _fetch.data.isUserLike == 1 ? -1 : 1;
-      _fetch.data.isUserLike = _fetch.data.isUserLike == 1 ? 0 : 1;
-    });
-    final prefs = PreferencesProvider.of(context);
-    await Api().likePost(
-      widget.postId,
-      prefs.getUser()?.tokenUser,
-    );
-    _fetchPost();
   }
 
   Widget _buildHeaderIcon({
@@ -238,12 +224,16 @@ class _PostScreenState extends State<PostScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildHeaderIcon(
-                            icon: Icons.favorite,
-                            color:
-                                post.isUserLike == 1 ? Colors.red[600] : null,
-                            text: "${post.likesPost} likes",
-                            onTap: _togglePostLike,
+                          LikeButton(
+                            isLike: post.isUserLike == 1,
+                            postId: post.idPost,
+                            likesCount: post.likesPost,
+                            onTap: (isLike) {
+                              setState(() => _fetch.data.isUserLike = isLike ? 1 : 0);
+                            },
+                            onDone: (_) {
+                              _fetchPost();
+                            },
                           ),
                           _buildHeaderIcon(
                             icon: Icons.mode_comment,
