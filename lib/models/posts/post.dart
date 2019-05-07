@@ -33,7 +33,7 @@ class Post {
   });
 
   String get dateAgo => getTimeAgo(this.datePost);
-  String get distanceStr => distance.toString()/*getTimeAgo(this.datePost)*/;
+  String get distanceStr => getDistance(distance).toString();
 
   factory Post.fromRawJson(String str) => Post.fromJson(json.decode(str));
 

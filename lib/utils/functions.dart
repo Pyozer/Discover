@@ -45,3 +45,5 @@ String getTimeAgo(DateTime time) {
   final years = diff.inDays ~/ 365;
   return "$years year${years > 1 ? "s" : ""} ago";
 }
+
+String getDistance(double distance) => distance < 1000 ?  "$distance m" :  "${distance ~/1000} km";
