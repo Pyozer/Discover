@@ -40,11 +40,11 @@ class PostRow extends StatelessWidget {
                           style: textTheme.title.copyWith(fontSize: 15.0),
                         ),
                         const SizedBox(height: 6.0),
-                        Text("150m", style: textTheme.caption)
+                        Text(post.distanceStr, style: textTheme.caption)
                       ],
                     ),
                   ),
-                  Text(post.datePost.toString(), style: textTheme.caption),
+                  Text(post.dateAgo, style: textTheme.caption),
                 ],
               ),
             ),
