@@ -28,20 +28,20 @@ bool isEmail(String email) {
   return regex.hasMatch(emailText);
 }
 
-String getTimeAgo(DateTime time){
-  
-  time = DateTime(2019,05,07, 11,00,00);
-
+String getTimeAgo(DateTime time) {
   final diff = DateTime.now().difference(time);
   if (diff.inSeconds < 60) return "${diff.inSeconds} sec ago";
   if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
-  final hours = diff.inHours;
-  if(hours < 60) return "${hours} hour${hours>1?"s":""} ago";
-  final days = diff.inDays;
-  if (days < 30) return "${days} day${days>1?"s":""} ago";
-  final mounths = diff.inDays/30;
-  if (days < 365) return "${mounths} mounth${mounths>1?"s":""} ago";
-  final years = diff.inDays ~/ 365;
-  return "${years} year${years>1?"s":""} ago";
 
+  final hours = diff.inHours;
+  if (hours < 60) return "$hours hour${hours > 1 ? "s" : ""} ago";
+
+  final days = diff.inDays;
+  if (days < 30) return "$days day${days > 1 ? "s" : ""} ago";
+
+  final mounths = diff.inDays / 30;
+  if (days < 365) return "$mounths mounth${mounths > 1 ? "s" : ""} ago";
+
+  final years = diff.inDays ~/ 365;
+  return "$years year${years > 1 ? "s" : ""} ago";
 }

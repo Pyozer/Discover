@@ -171,7 +171,7 @@ class _PostScreenState extends State<PostScreen> {
                             color: Colors.grey[200],
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              "Posted ${post.datePost.toString()}",
+                              "Posted ${post.dateAgo}",
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.grey[600]),
                             ),
@@ -194,7 +194,7 @@ class _PostScreenState extends State<PostScreen> {
                                 ),
                                 _buildHeaderIcon(
                                   icon: Icons.directions,
-                                  text: "183km",
+                                  text: post.distanceStr,
                                   onTap: () {},
                                 ),
                               ],

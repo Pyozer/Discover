@@ -45,7 +45,7 @@ class PostRow extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(getTimeAgo(post.datePost), style: textTheme.caption),
+                  Text(post.dateAgo, style: textTheme.caption),
                 ],
               ),
             ),
