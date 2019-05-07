@@ -54,10 +54,6 @@ class _LoginPageState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     _pageController = PageController();
   }
 
@@ -75,44 +71,41 @@ class _LoginPageState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       key: _scaffoldKey,
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowGlow();
-        },
+      body: Container(
+        height: size.height,
+        width: size.width,
+        decoration: BoxDecoration(gradient: Gradients.coldLinear),
         child: SingleChildScrollView(
-          child: Container(
-            width: size.width,
-            height: size.height,
-            decoration: BoxDecoration(gradient: Gradients.coldLinear),
-            child: Column(
-              children: [
-                const SizedBox(height: 75),
-                SvgPicture.asset(
-                  'assets/images/logo.svg',
-                  height: 200,
+          child: Column(
+            children: [
+              const SizedBox(height: 75),
+              SvgPicture.asset(
+                'assets/images/logo.svg',
+                height: 200,
+              ),
+              const SizedBox(height: 32),
+              _buildMenuBar(context),
+              const SizedBox(height: 22),
+              Container(
+                height: 380,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (i) {
+                    setState(() {
+                      right = i == 0 ? Colors.white : Colors.black;
+                      left = i == 0 ? Colors.black : Colors.white;
+                    });
+                  },
+                  children: [
+                    _buildSignIn(context),
+                    _buildSignUp(context),
+                  ],
                 ),
-                const SizedBox(height: 32),
-                _buildMenuBar(context),
-                const SizedBox(height: 22),
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      setState(() {
-                        right = i == 0 ? Colors.white : Colors.black;
-                        left = i == 0 ? Colors.black : Colors.white;
-                      });
-                    },
-                    children: [
-                      _buildSignIn(context),
-                      _buildSignUp(context),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
