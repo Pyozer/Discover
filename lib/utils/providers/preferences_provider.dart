@@ -45,7 +45,9 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     widget.prefs.setBool(PrefKey.isLogged, isUserLogged);
   }
 
-  Position getUserPos() => _userPosition;
+  Position getUserPos() {
+    return _userPosition ?? Position(latitude: 48.789311, longitude: 2.363550);
+  }
 
   void setUserPosition(Position userPosition, [bool state = false]) {
     _setPref(() => _userPosition = userPosition, state);

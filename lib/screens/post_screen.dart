@@ -1,4 +1,5 @@
 import 'package:discover/models/posts/posts_response.dart';
+import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/comment_row.dart';
@@ -17,9 +18,11 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   Future<PostsResponse> _fetchPost() async {
+    final prefs = PreferencesProvider.of(context);
     return await Api().getPost(
       widget.postId,
-      PreferencesProvider.of(context).getUser()?.tokenUser,
+      prefs.getUserPos(),
+      prefs.getUser()?.tokenUser,
     );
   }
 
@@ -107,7 +110,9 @@ class _PostScreenState extends State<PostScreen> {
                                     const SizedBox(width: 16.0),
                                     Expanded(
                                       child: Text(
-                                        post.authorPost.firstNameUser + " " + post.authorPost.lastNameUser,
+                                        post.authorPost.firstNameUser +
+                                            " " +
+                                            post.authorPost.lastNameUser,
                                         style: const TextStyle(fontSize: 18.0),
                                       ),
                                     ),

@@ -1,5 +1,5 @@
 import 'package:discover/models/posts/posts_response.dart';
-import 'package:discover/models/posts/request/post_location_payload.dart';
+import 'package:discover/models/posts/request/posts_location_payload.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/post_row.dart';

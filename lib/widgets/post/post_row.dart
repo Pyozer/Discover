@@ -1,6 +1,5 @@
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
-import 'package:discover/utils/functions.dart';
 import 'package:discover/widgets/ui/rounded_image.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
