@@ -171,7 +171,7 @@ class _PostScreenState extends State<PostScreen> {
                             color: Colors.grey[200],
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              "Posted 14 days ago",
+                              "Posted ${post.datePost.toString()}",
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.grey[600]),
                             ),

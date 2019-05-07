@@ -7,7 +7,7 @@ import 'package:discover/models/posts/request/post_location_payload.dart';
 import 'package:discover/utils/api/base_api.dart';
 
 class Api extends BaseApi {
-  Api() : super("http://10.3.0.149:3000/api/");
+  Api() : super("https://discoverapi.herokuapp.com/api/");
 
   /// Register user
   Future<User> register(RegisterPayload payload) async {

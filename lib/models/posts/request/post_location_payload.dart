@@ -15,6 +15,6 @@ class PostsLocationPayload {
         "latitude_user": latitude?.toString(),
         "longitude_user": longitude?.toString(),
         "distance": distance?.toString(),
-        "tags": (tags?.isEmpty ?? true) ? "-1" : tags.join(','),
+        "tags": tags?.join(','),
       };
 }

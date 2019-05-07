@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:discover/models/tags/tag.dart';
 import 'package:discover/models/users/user.dart';
 
 class Post {
@@ -12,6 +13,7 @@ class Post {
   int commentsPost;
   int isUserLike;
   User authorPost;
+  List<Tag> tags;
 
   Post({
     this.idPost,
@@ -24,6 +26,7 @@ class Post {
     this.commentsPost,
     this.isUserLike,
     this.authorPost,
+    this.tags,
   });
 
   factory Post.fromRawJson(String str) => Post.fromJson(json.decode(str));
@@ -39,5 +42,8 @@ class Post {
         commentsPost: json["comments_post"],
         isUserLike: json["isUserLike"],
         authorPost: User.fromJson(json["author_post"]),
+        tags: json["tags_post"] != null
+            ? List<Tag>.from(json["tags_post"].map((x) => Tag.fromJson(x)))
+            : [],
       );
 }

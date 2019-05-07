@@ -52,7 +52,7 @@ class PostRow extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => PostScreen()),
+                MaterialPageRoute(builder: (_) => PostScreen(postId: post.idPost)),
               );
             },
             child: RoundedImage(
