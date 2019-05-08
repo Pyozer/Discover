@@ -1,4 +1,5 @@
 import 'package:discover/models/comments/comments_response.dart';
+import 'package:discover/models/comments/request/comment_payload.dart';
 import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/tags/tag.dart';
@@ -14,8 +15,10 @@ import 'package:flutter/painting.dart';
 
 class PostScreen extends StatefulWidget {
   final int postId;
+  String text = "";
+  final myController = TextEditingController();
 
-  PostScreen({Key key, this.postId}) : super(key: key);
+  PostScreen({Key key, this.postId, this.text}) : super(key: key);
 
   _PostScreenState createState() => _PostScreenState();
 }
@@ -53,6 +56,15 @@ class _PostScreenState extends State<PostScreen> {
     final prefs = PreferencesProvider.of(context);
     return await Api().getComments(
       widget.postId,
+      prefs.getUser()?.token,
+    );
+  }
+
+  Future<void> _sendComment() async {
+    final prefs = PreferencesProvider.of(context);
+    await Api().addComment(
+      widget.postId,
+      CommentPayLoad(text: widget.text),
       prefs.getUser()?.token,
     );
   }
@@ -192,16 +204,21 @@ class _PostScreenState extends State<PostScreen> {
                             ),
                           ),
                           _buildComments(),
-                          TextFormField(
+                          TextField(
+                            controller: widget.myController,
+                            onChanged: (value) {
+                              setState(() => widget.text = value);
+                            },
                             decoration: InputDecoration(
                                 hintText: 'Enter your comment',
                                 filled: true,
                                 suffixIcon: IconButton(
                                     icon: Icon(Icons.send),
                                     onPressed: () {
-                                      debugPrint('222');
+                                      _sendComment();
+                                      widget.myController.text;
                                     })),
-                          ),
+                          )
                         ],
                       ),
                     ),
