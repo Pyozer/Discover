@@ -192,6 +192,16 @@ class _PostScreenState extends State<PostScreen> {
                             ),
                           ),
                           _buildComments(),
+                          TextFormField(
+                            decoration: InputDecoration(
+                                hintText: 'Enter your comment',
+                                filled: true,
+                                suffixIcon: IconButton(
+                                    icon: Icon(Icons.send),
+                                    onPressed: () {
+                                      debugPrint('222');
+                                    })),
+                          ),
                         ],
                       ),
                     ),
