@@ -1,4 +1,4 @@
-import 'package:discover/models/comments/comments_response.dart';
+import 'package:discover/models/comments/comment.dart';
 import 'package:discover/models/comments/request/comment_payload.dart';
 import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
@@ -15,27 +15,35 @@ import 'package:flutter/painting.dart';
 
 class PostScreen extends StatefulWidget {
   final int postId;
-  String text = "";
-  final myController = TextEditingController();
 
-  PostScreen({Key key, this.postId, this.text}) : super(key: key);
+  PostScreen({Key key, this.postId}) : super(key: key);
 
   _PostScreenState createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
-  FetchData<Post> _fetch = FetchData<Post>();
+  final _fetch = FetchData<Post>();
+  final _fetchComments = FetchData<List<Comment>>();
+  final _commentController = TextEditingController();
+  final _commentTextFocus = FocusNode();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _fetchPost();
+    _fetchAllComments();
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    _commentTextFocus.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchPost() async {
     if (!mounted || _fetch.isLoading) return;
     setState(() => _fetch.isLoading = true);
-
     try {
       final prefs = PreferencesProvider.of(context);
       final response = await Api().getPost(
@@ -43,7 +51,6 @@ class _PostScreenState extends State<PostScreen> {
         prefs.getUserPos(),
         prefs.getUser()?.token,
       );
-
       _fetch.data = response.posts?.first;
     } catch (e) {
       _fetch.error = e;
@@ -52,21 +59,35 @@ class _PostScreenState extends State<PostScreen> {
     setState(() => _fetch.isLoading = false);
   }
 
-  Future<CommentsResponse> _fetchComment() async {
-    final prefs = PreferencesProvider.of(context);
-    return await Api().getComments(
-      widget.postId,
-      prefs.getUser()?.token,
-    );
+  Future<void> _fetchAllComments() async {
+    if (!mounted) return;
+    setState(() => _fetchComments.isLoading = true);
+    try {
+      final response = await Api().getComments(
+        widget.postId,
+        PreferencesProvider.of(context).getUser()?.token,
+      );
+      _fetchComments.data = response.comments;
+    } catch (e) {
+      _fetchComments.error = e;
+    }
+    if (!mounted) return;
+    setState(() => _fetchComments.isLoading = false);
   }
 
   Future<void> _sendComment() async {
-    final prefs = PreferencesProvider.of(context);
+    final comment = _commentController.text.trim();
+    _commentController.clear();
+    setState(() {
+      _fetchComments.data = null;
+      _fetchComments.isLoading = true;
+    });
     await Api().addComment(
       widget.postId,
-      CommentPayLoad(text: widget.text),
-      prefs.getUser()?.token,
+      CommentPayLoad(text: comment),
+      PreferencesProvider.of(context).getUser()?.token,
     );
+    _fetchAllComments();
   }
 
   Widget _buildHeaderIcon({
@@ -99,25 +120,22 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Widget _buildComments() {
-    return FutureBuilder<CommentsResponse>(
-      future: _fetchComment(),
-      builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.waiting)
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        if (snap.hasError || (snap.data.comments?.isEmpty ?? true))
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(snap.error?.toString() ?? "No comments"),
-          );
-        return Column(
-          children: snap.data.comments
-              .map((comment) => CommentRow(comment: comment))
-              .toList(),
-        );
-      },
+    if (!_fetchComments.hasData && _fetchComments.isLoading) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_fetchComments.hasError || !_fetchComments.hasData) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(_fetchComments.error?.toString() ?? "No comments"),
+      );
+    }
+    return Column(
+      children: _fetchComments.data
+          .map((comment) => CommentRow(comment: comment))
+          .toList(),
     );
   }
 
@@ -197,28 +215,27 @@ class _PostScreenState extends State<PostScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-                            child: Text(
-                              "Commentaires".toUpperCase(),
-                              style: textTheme.caption,
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                            child: Text("COMMENTS", style: textTheme.caption),
+                          ),
+                          TextField(
+                            controller: _commentController,
+                            focusNode: _commentTextFocus,
+                            minLines: 1,
+                            maxLines: 5,
+                            keyboardType: TextInputType.multiline,
+                            decoration: InputDecoration(
+                              hintText: 'Enter your comment',
+                              filled: true,
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.send),
+                                onPressed: _sendComment,
+                              ),
                             ),
                           ),
                           _buildComments(),
-                          TextField(
-                            controller: widget.myController,
-                            onChanged: (value) {
-                              setState(() => widget.text = value);
-                            },
-                            decoration: InputDecoration(
-                                hintText: 'Enter your comment',
-                                filled: true,
-                                suffixIcon: IconButton(
-                                    icon: Icon(Icons.send),
-                                    onPressed: () {
-                                      _sendComment();
-                                      widget.myController.text;
-                                    })),
-                          )
                         ],
                       ),
                     ),
@@ -264,7 +281,8 @@ class _PostScreenState extends State<PostScreen> {
                                 icon: Icons.mode_comment,
                                 text: "${post.comments} comments",
                                 onTap: () {
-                                  //TODO: Focus add comment textfield
+                                  FocusScope.of(context)
+                                      .requestFocus(_commentTextFocus);
                                 },
                               ),
                             ),
