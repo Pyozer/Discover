@@ -63,6 +63,7 @@ void showErrorDialog(BuildContext context, dynamic error) {
         title: "Error",
         content: Text(error.toString()),
         isNegative: false,
+        positiveBtn: "Ok",
         onPositive: () => Navigator.of(dialogCtx).pop(),
       );
     },
