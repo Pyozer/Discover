@@ -56,11 +56,14 @@ class PostRow extends StatelessWidget {
                 ),
               );
             },
-            child: FadeInImage.assetNetwork(
-              image: post.photo,
-              height: 250,
-              placeholder: AssetKey.placeholderPost,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: post.id,
+              child: FadeInImage.assetNetwork(
+                image: post.photo,
+                height: 250,
+                placeholder: AssetKey.placeholderPost,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(

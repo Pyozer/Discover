@@ -183,12 +183,15 @@ class _PostScreenState extends State<PostScreen> {
       children: [
         Stack(
           children: [
-            FadeInImage.assetNetwork(
-              image: post.photo,
-              fit: BoxFit.cover,
-              height: screenSize.height / 3.5,
-              width: screenSize.width,
-              placeholder: AssetKey.placeholderPost,
+            Hero(
+              tag: post.id,
+              child: FadeInImage.assetNetwork(
+                image: post.photo,
+                fit: BoxFit.cover,
+                height: screenSize.height / 3.5,
+                width: screenSize.width,
+                placeholder: AssetKey.placeholderPost,
+              ),
             ),
             AppBar(
               elevation: 0,
