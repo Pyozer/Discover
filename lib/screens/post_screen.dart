@@ -90,6 +90,12 @@ class _PostScreenState extends State<PostScreen> {
     _fetchAllComments();
   }
 
+  Future<void> _deletePost() async {
+    // TODO: Display confirmation dialog
+    // TODO: Call API to remove post
+    Navigator.of(context).pop();
+  }
+
   Widget _buildHeaderIcon({
     IconData icon,
     Color color,
@@ -134,7 +140,10 @@ class _PostScreenState extends State<PostScreen> {
     }
     return Column(
       children: _fetchComments.data
-          .map((comment) => CommentRow(comment: comment))
+          .map((comment) => CommentRow(
+                comment: comment,
+                onDeleted: _fetchAllComments,
+              ))
           .toList(),
     );
   }
@@ -161,7 +170,16 @@ class _PostScreenState extends State<PostScreen> {
               width: screenSize.width,
               placeholder: AssetKey.placeholderPost,
             ),
-            AppBar(elevation: 0, backgroundColor: Colors.transparent),
+            AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              actions: post.author.id == PreferencesProvider.of(context).getUser().id ? [
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: _deletePost,
+                )
+              ] : [],
+            ),
           ],
         ),
         Expanded(
