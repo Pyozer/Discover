@@ -1,4 +1,5 @@
 import 'package:discover/models/posts/post.dart';
+import 'package:discover/screens/post_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,14 @@ class _MapScreenState extends State<MapScreen> {
     return Marker(
       position: LatLng(post.latitude, post.longitude),
       markerId: MarkerId("${post.id}"),
-      infoWindow: InfoWindow(title: "Post by ${post.author.userInfo}"),
+      infoWindow: InfoWindow(
+        title: "Post by ${post.author.userInfo}",
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => PostScreen(postId: post.id),
+          ));
+        },
+      ),
     );
   }
 
