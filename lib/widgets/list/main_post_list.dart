@@ -1,3 +1,4 @@
+import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/posts/request/posts_location_payload.dart';
 import 'package:discover/utils/api/api.dart';
@@ -13,20 +14,36 @@ class MainPostList extends StatefulWidget {
 }
 
 class MainPostListState extends State<MainPostList> {
-  final ScrollController _controller = ScrollController();
+  final _fetch = FetchData<PostsResponse>();
+  final _controller = ScrollController();
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  Future<PostsResponse> _fetchPosts() async {
-    final prefs = PreferencesProvider.of(context);
-    final response = await Api().getPostByLocation(
-      PostsLocationPayload(
-        latitude: prefs.getUserPos().latitude,
-        longitude: prefs.getUserPos().longitude,
-        distance: 200000,
-        tags: [],
-      ),
-      prefs.getUser()?.token,
-    );
-    return response;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    if (!mounted || _fetch.isLoading) return;
+    setState(() => _fetch.isLoading = true);
+
+    try {
+      final prefs = PreferencesProvider.of(context);
+      _fetch.data = await Api().getPostByLocation(
+        PostsLocationPayload(
+          latitude: prefs.getUserPos().latitude,
+          longitude: prefs.getUserPos().longitude,
+          distance: 200000,
+          tags: [],
+        ),
+        prefs.getUser()?.token,
+      );
+    } catch (e) {
+      _fetch.error = e;
+    }
+    if (!mounted) return;
+    setState(() => _fetch.isLoading = false);
   }
 
   Future<void> goToTop() {
@@ -39,20 +56,24 @@ class MainPostListState extends State<MainPostList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PostsResponse>(
-      future: _fetchPosts(),
-      builder: (_, snap) {
-        if (snap.hasError) return Center(child: Text(snap.error.toString()));
-        if (!snap.hasData) return Center(child: CircularProgressIndicator());
-        if (snap.data.posts?.isEmpty ?? true)
-          return Center(child: Text("Empty"));
+    if (_fetch.hasError) {
+      return Center(child: Text(_fetch.error.toString()));
+    }
+    if (!_fetch.hasData && _fetch.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    if (_fetch.data.posts?.isEmpty ?? true) {
+      return Center(child: Text("Empty"));
+    }
 
-        return ListView.builder(
-          controller: _controller,
-          itemCount: snap.data.posts.length,
-          itemBuilder: (context, i) => PostRow(post: snap.data.posts[i]),
-        );
-      },
+    return RefreshIndicator(
+      key: _refreshKey,
+      onRefresh: _fetchPosts,
+      child: ListView.builder(
+        controller: _controller,
+        itemCount: _fetch.data.posts.length,
+        itemBuilder: (context, i) => PostRow(post: _fetch.data.posts[i]),
+      ),
     );
   }
 }
