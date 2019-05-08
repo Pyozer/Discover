@@ -8,6 +8,7 @@ import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/post/comment_row.dart';
+import 'package:discover/widgets/ui/custom_alert_dialog.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,18 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _deletePost() async {
-    // TODO: Display confirmation dialog
+    bool isOk = await showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return CustomAlertDialog(
+          title: "Delete post",
+          content: Text("Are you sure you want to delete this post ?"),
+          onNegative: () => Navigator.of(context).pop(false),
+          onPositive: () => Navigator.of(context).pop(true),
+        );
+      },
+    );
+    if (isOk != true) return;
 
     try {
       final token = PreferencesProvider.of(context).getUser()?.token;
