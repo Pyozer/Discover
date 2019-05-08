@@ -23,7 +23,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginPageState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formSignInKey = GlobalKey<FormState>();
   final _formSignUpKey = GlobalKey<FormState>();
 
@@ -74,7 +73,6 @@ class _LoginPageState extends State<LoginScreen>
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      key: _scaffoldKey,
       body: Container(
         height: size.height,
         width: size.width,
@@ -319,10 +317,6 @@ class _LoginPageState extends State<LoginScreen>
     );
   }
 
-  void _showMessage(String message) {
-    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
-  }
-
   void _onSignIn() async {
     _formSignInKey.currentState?.save();
 
@@ -330,9 +324,9 @@ class _LoginPageState extends State<LoginScreen>
     final pwd = _signInValues[Field.PASSWORD];
 
     if (email.isEmpty || pwd.isEmpty) {
-      return _showMessage("You must fill all textfields");
+      return showErrorDialog(context, "You must fill all textfields");
     } else if (!isEmail(email)) {
-      return _showMessage("Email is wrong");
+      return showErrorDialog(context, "Email is wrong");
     }
 
     try {
@@ -345,9 +339,7 @@ class _LoginPageState extends State<LoginScreen>
         MaterialPageRoute(builder: (_) => HomeScreen()),
       );
     } catch (e) {
-      _scaffoldKey.currentState?.showSnackBar(SnackBar(
-        content: Text(e.toString()),
-      ));
+      showErrorDialog(context, e);
     }
   }
 
@@ -365,11 +357,14 @@ class _LoginPageState extends State<LoginScreen>
         pwdConfirm.isEmpty ||
         firstName.isEmpty ||
         lastName.isEmpty) {
-      return _showMessage("You must fill all textfields");
+      return showErrorDialog(context, "You must fill all textfields");
     } else if (!isEmail(email)) {
-      return _showMessage("Email is wrong");
+      return showErrorDialog(context, "Email is wrong");
     } else if (pwd != pwdConfirm) {
-      return _showMessage("Password and confirmation are not identical");
+      return showErrorDialog(
+        context,
+        "Password and confirmation are not identical",
+      );
     }
 
     try {
@@ -385,9 +380,7 @@ class _LoginPageState extends State<LoginScreen>
         MaterialPageRoute(builder: (_) => HomeScreen()),
       );
     } catch (e) {
-      _scaffoldKey.currentState?.showSnackBar(SnackBar(
-        content: Text(e.toString()),
-      ));
+      showErrorDialog(context, e);
     }
   }
 }

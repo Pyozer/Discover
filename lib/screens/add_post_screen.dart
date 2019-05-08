@@ -4,6 +4,7 @@ import 'package:discover/models/posts/request/post_payload.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/screens/post_screen.dart';
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/tags_dialog.dart';
@@ -39,8 +40,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void _fetchTags() async {
-    final tagsRes = await Api().getTags();
-    setState(() => _tags = tagsRes.tags);
+    try {
+      final tagsRes = await Api().getTags();
+      setState(() => _tags = tagsRes.tags);
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   Future<String> _uploadImage() async {
@@ -53,24 +58,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<void> _sendPost() async {
-    String imageUrl = await _uploadImage();
-    final prefs = PreferencesProvider.of(context);
-    final response = await Api().addPost(
-      PostPayload(
-        imageUrl: imageUrl,
-        content: _description,
-        latitude: prefs.getUserPos().latitude,
-        longitude: prefs.getUserPos().longitude,
-        tags: _selectedTags,
-      ),
-      prefs.getUser()?.token,
-    );
-    if ((response.posts?.first?.id ?? null) != null)
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (_) => PostScreen(postId: response.posts.first.id),
-      ));
-    else
-      Navigator.of(context).pop();
+    try {
+      String imageUrl = await _uploadImage();
+      final prefs = PreferencesProvider.of(context);
+      final response = await Api().addPost(
+        PostPayload(
+          imageUrl: imageUrl,
+          content: _description,
+          latitude: prefs.getUserPos().latitude,
+          longitude: prefs.getUserPos().longitude,
+          tags: _selectedTags,
+        ),
+        prefs.getUser()?.token,
+      );
+      if ((response.posts?.first?.id ?? null) != null)
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => PostScreen(postId: response.posts.first.id),
+        ));
+      else
+        Navigator.of(context).pop();
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   Future _openGalleryCamera() async {

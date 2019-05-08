@@ -11,6 +11,7 @@ class CustomAlertDialog extends StatelessWidget {
   final String negativeBtn;
   final VoidCallback onNegative;
   final bool contentPadding;
+  final bool isNegative;
 
   const CustomAlertDialog({
     Key key,
@@ -19,12 +20,25 @@ class CustomAlertDialog extends StatelessWidget {
     this.positiveBtn = "Yes",
     this.negativeBtn = "No",
     @required this.onPositive,
-    @required this.onNegative,
+    this.onNegative,
     this.contentPadding = true,
-  }) : super(key: key);
+    this.isNegative = true,
+  })  : assert((isNegative != null && onNegative != null) || !isNegative,
+            "If button negative, you must provide onNegative callback"),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> buttons = [
+      BtnColored(text: positiveBtn, onPressed: onPositive),
+    ];
+    if (isNegative) {
+      buttons.insertAll(0, [
+        FlatBtnRounded(text: negativeBtn, onPressed: onNegative),
+        const SizedBox(width: 12.0),
+      ]);
+    }
+
     return CustomDialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -43,11 +57,7 @@ class CustomAlertDialog extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatBtnRounded(text: negativeBtn, onPressed: onNegative),
-                const SizedBox(width: 12.0),
-                BtnColored(text: positiveBtn, onPressed: onPositive),
-              ],
+              children: buttons,
             ),
           )
         ],

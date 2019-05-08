@@ -1,6 +1,7 @@
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,9 +27,13 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _fetchPost() async {
-    final prefs = PreferencesProvider.of(context);
-    final res = await Api().getPostsMaps(prefs.getUser()?.token);
-    setState(() => _posts = res.posts ?? []);
+    try {
+      final prefs = PreferencesProvider.of(context);
+      final res = await Api().getPostsMaps(prefs.getUser()?.token);
+      setState(() => _posts = res.posts ?? []);
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   Marker _buildMarker(Post post) {

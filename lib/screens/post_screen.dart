@@ -4,6 +4,7 @@ import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/like_button.dart';
@@ -77,18 +78,23 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> _sendComment() async {
+    if (!mounted) return;
     final comment = _commentController.text.trim();
     _commentController.clear();
     setState(() {
       _fetchComments.data = null;
       _fetchComments.isLoading = true;
     });
-    await Api().addComment(
-      widget.postId,
-      CommentPayLoad(text: comment),
-      PreferencesProvider.of(context).getUser()?.token,
-    );
-    _fetchAllComments();
+    try {
+      await Api().addComment(
+        widget.postId,
+        CommentPayLoad(text: comment),
+        PreferencesProvider.of(context).getUser()?.token,
+      );
+      _fetchAllComments();
+    } catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   Future<void> _deletePost() async {
@@ -112,7 +118,7 @@ class _PostScreenState extends State<PostScreen> {
         Navigator.of(context).pop();
       }
     } catch (e) {
-      // TODO: Display error dialog
+      showErrorDialog(context, e);
     }
   }
 

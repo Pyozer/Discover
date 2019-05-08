@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:discover/widgets/ui/custom_alert_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 String positionToJsonString(Position position) {
@@ -51,4 +53,18 @@ String getTimeAgo(DateTime time) {
 String getDistance(int distance) {
   if (distance == null) return "";
   return distance < 1000 ? "${distance}m" : "${distance ~/ 1000}km";
+}
+
+void showErrorDialog(BuildContext context, dynamic error) {
+  showDialog(
+    context: context,
+    builder: (dialogCtx) {
+      return CustomAlertDialog(
+        title: "Error",
+        content: Text(error.toString()),
+        isNegative: false,
+        onPositive: () => Navigator.of(dialogCtx).pop(),
+      );
+    },
+  );
 }

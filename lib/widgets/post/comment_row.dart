@@ -32,7 +32,7 @@ class CommentRow extends StatelessWidget {
       await Api().deleteComment(comment.idPost, comment.id, token);
       onDeleted();
     } catch (e) {
-      // TODO: Display error dialog
+      showErrorDialog(context, e);
     }
   }
 
