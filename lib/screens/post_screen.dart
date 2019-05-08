@@ -92,8 +92,16 @@ class _PostScreenState extends State<PostScreen> {
 
   Future<void> _deletePost() async {
     // TODO: Display confirmation dialog
-    // TODO: Call API to remove post
-    Navigator.of(context).pop();
+
+    try {
+      final token = PreferencesProvider.of(context).getUser()?.token;
+      final res = await Api().deletePost(_fetch.data.id, token);
+      if (res.result) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      // TODO: Display error dialog
+    }
   }
 
   Widget _buildHeaderIcon({
@@ -173,12 +181,15 @@ class _PostScreenState extends State<PostScreen> {
             AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              actions: post.author.id == PreferencesProvider.of(context).getUser().id ? [
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: _deletePost,
-                )
-              ] : [],
+              actions:
+                  post.author.id == PreferencesProvider.of(context).getUser().id
+                      ? [
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: _deletePost,
+                          )
+                        ]
+                      : [],
             ),
           ],
         ),

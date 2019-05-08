@@ -1,4 +1,5 @@
 import 'package:discover/models/comments/comment.dart';
+import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -11,10 +12,16 @@ class CommentRow extends StatelessWidget {
   const CommentRow({Key key, @required this.comment, @required this.onDeleted})
       : super(key: key);
 
-  Future<void> _deleteComment() async {
+  Future<void> _deleteComment(BuildContext context) async {
     // TODO: Display confirm dialog
     // TODO: Call API to remove comment
-    onDeleted();
+    try {
+      final token = PreferencesProvider.of(context).getUser()?.token;
+      await Api().deleteComment(comment.idPost, comment.id, token);
+      onDeleted();
+    } catch (e) {
+      // TODO: Display error dialog
+    }
   }
 
   @override
@@ -22,7 +29,8 @@ class CommentRow extends StatelessWidget {
     final userId = PreferencesProvider.of(context).getUser()?.id;
 
     return InkWell(
-      onLongPress: userId == comment.idUser ? _deleteComment : null,
+      onLongPress:
+          comment.idUser == userId ? () => _deleteComment(context) : null,
       child: Container(
         padding: const EdgeInsets.all(16.0),
         child: Row(

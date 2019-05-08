@@ -48,7 +48,7 @@ class _LikeButtonState extends State<LikeButton> {
       widget.postId,
       prefs.getUser()?.token,
     );
-    if (widget.onDone != null) widget.onDone(response.isLike);
+    if (widget.onDone != null) widget.onDone(response.result);
   }
 
   @override

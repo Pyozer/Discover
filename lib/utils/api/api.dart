@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:discover/models/comments/comments_response.dart';
 import 'package:discover/models/comments/request/comment_payload.dart';
-import 'package:discover/models/likes/like_response.dart';
 import 'package:discover/models/posts/request/post_payload.dart';
+import 'package:discover/models/result_response.dart';
 import 'package:discover/models/tags/tags_response.dart';
 import 'package:discover/models/users/request/login_payload.dart';
 import 'package:discover/models/users/request/register_payload.dart';
@@ -73,6 +73,12 @@ class Api extends BaseApi {
     return PostsResponse.fromJson(getWithBaseData(response));
   }
 
+  /// Delete post
+  Future<ResultResponse> deletePost(int postId, String token) async {
+    final response = await httpDelete(getUrl("/posts/$postId"), token: token);
+    return ResultResponse.fromJson(getWithBaseData(response));
+  }
+
   /// Get tags
   Future<TagsResponse> getTags() async {
     final response = await httpGet(getUrl("/tags"));
@@ -89,7 +95,11 @@ class Api extends BaseApi {
   }
 
   /// Add comment
-  Future<CommentsResponse> addComment(int idPost,CommentPayLoad payload, String token) async {
+  Future<CommentsResponse> addComment(
+    int idPost,
+    CommentPayLoad payload,
+    String token,
+  ) async {
     final response = await httpPost(
       getUrl("/posts/$idPost/comments"),
       token: token,
@@ -98,10 +108,22 @@ class Api extends BaseApi {
     return CommentsResponse.fromJson(getWithBaseData(response));
   }
 
+  /// Delete comment
+  Future<ResultResponse> deleteComment(
+    int postId,
+    int commentId,
+    String token,
+  ) async {
+    final response = await httpDelete(
+      getUrl("/posts/$postId/comments/$commentId"),
+      token: token,
+    );
+    return ResultResponse.fromJson(getWithBaseData(response));
+  }
+
   /// Add like
-  Future<LikeResponse> likePost(int idPost, String token) async {
-    final response =
-        await httpPost(getUrl("/posts/$idPost/likes"), token: token);
-    return LikeResponse.fromJson(getWithBaseData(response));
+  Future<ResultResponse> likePost(int idPost, String token) async {
+    final res = await httpPost(getUrl("/posts/$idPost/likes"), token: token);
+    return ResultResponse.fromJson(getWithBaseData(res));
   }
 }
