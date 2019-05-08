@@ -43,12 +43,14 @@ class Post {
         photo: json["photo_post"],
         distance: json["distance"],
         date: DateTime.parse(json["date_post"]),
-        latitude: json["latitude_post"].toDouble(),
-        longitude: json["longitude_post"].toDouble(),
+        latitude: json["latitude_post"],
+        longitude: json["longitude_post"],
         likes: json["likes_post"],
         comments: json["comments_post"],
         isUserLike: json["isUserLike"],
-        author: User.fromJson(json["author_post"]),
+        author: json["author_post"] != null
+            ? User.fromJson(json["author_post"])
+            : null,
         tags: json["tags_post"] != null
             ? List<Tag>.from(json["tags_post"].map((x) => Tag.fromJson(x)))
             : [],
