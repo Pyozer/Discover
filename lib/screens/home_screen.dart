@@ -59,28 +59,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text("My Account"),
               leading: Icon(Icons.person),
-              onTap: () {},
             ),
             ListTile(
               title: Text("Search user"),
               leading: Icon(Icons.search),
-              onTap: () {},
             ),
             const Divider(),
             ListTile(
               title: Text("About"),
               leading: Icon(Icons.info_outline),
-              onTap: () {},
             ),
             ListTile(
               title: Text("Introduction"),
               leading: Icon(Icons.view_carousel),
-              onTap: () {},
             ),
             ListTile(
               title: Text("Feedback"),
               leading: Icon(Icons.feedback),
-              onTap: () {},
             ),
             const Divider(),
             ListTile(
