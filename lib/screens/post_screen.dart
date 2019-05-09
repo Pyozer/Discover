@@ -14,6 +14,7 @@ import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostScreen extends StatefulWidget {
   final int postId;
@@ -94,6 +95,16 @@ class _PostScreenState extends State<PostScreen> {
       _fetchAllComments();
     } catch (e) {
       showErrorDialog(context, e);
+    }
+  }
+
+  Future<void>_goToPost() async{
+    final prefs = PreferencesProvider.of(context);
+    String googleUrl = "https://www.google.fr/maps/dir/${prefs.getUserPos().latitude},${prefs.getUserPos().longitude}/${_fetch.data.latitude},${_fetch.data.longitude}/@48.8750184,2.2405866,11z/";
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
     }
   }
 
@@ -343,7 +354,7 @@ class _PostScreenState extends State<PostScreen> {
                                 icon: Icons.directions,
                                 text: post.distanceStr,
                                 onTap: () {
-                                  // TODO: Open map app
+                                  _goToPost();
                                 },
                               ),
                             ),
