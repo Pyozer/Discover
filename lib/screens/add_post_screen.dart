@@ -49,12 +49,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<String> _uploadImage() async {
-    /*String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
+    String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
       _image.path,
-      BUCKET_NAME,
-      IDENTITY_POOL_ID,
-    );*/
-    return "http://images.unsplash.com/photo-1555985202-12975b0235dc";
+      'discoverstorage',
+      'eu-west-1:19e56073-5b37-4cdf-bdcd-215edbf2c1d1',
+      _image.path.split('/').last,
+    );
+    if (!uploadedImageUrl.contains("s3-eu-west-1"))
+      throw Exception("Error during sending image..");
+    return uploadedImageUrl;
   }
 
   Future<void> _sendPost() async {
@@ -65,6 +68,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         PostPayload(
           imageUrl: imageUrl,
           content: _description,
+          infos: _additionalInfo,
           latitude: prefs.getUserPos().latitude,
           longitude: prefs.getUserPos().longitude,
           tags: _selectedTags,
@@ -90,7 +94,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               ListTile(
                 title: Text("Camera"),
                 onTap: () {

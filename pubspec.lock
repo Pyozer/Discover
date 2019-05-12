@@ -81,9 +81,11 @@ packages:
   flutter_amazon_s3:
     dependency: "direct main"
     description:
-      name: flutter_amazon_s3
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "8043be79263d56ed02e879afa49a14e591519c5e"
+      url: "git://github.com/Pyozer/flutter_amazon_s3.git"
+    source: git
     version: "0.0.9"
   flutter_launcher_icons:
     dependency: "direct dev"
@@ -152,14 +154,14 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.9"
   image_picker:
     dependency: "direct main"
     description:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0+2"
+    version: "0.6.0+3"
   location_permissions:
     dependency: transitive
     description:

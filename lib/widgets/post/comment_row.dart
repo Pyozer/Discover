@@ -55,7 +55,7 @@ class CommentRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
-                    children: <Widget>[
+                    children: [
                       Expanded(
                         child: Text(
                           comment.userInfo,

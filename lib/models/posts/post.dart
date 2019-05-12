@@ -6,6 +6,7 @@ import 'package:discover/utils/functions.dart';
 class Post {
   int id;
   String content;
+  String info;
   String photo;
   int distance;
   DateTime date;
@@ -20,6 +21,7 @@ class Post {
   Post({
     this.id,
     this.content,
+    this.info,
     this.photo,
     this.distance,
     this.date,
@@ -40,6 +42,7 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) => Post(
         id: json["id_post"],
         content: json["content_post"],
+        info: json["info_post"],
         photo: json["photo_post"],
         distance: json["distance"],
         date: DateTime.parse(json["date_post"]),

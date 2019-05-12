@@ -262,15 +262,28 @@ class _PostScreenState extends State<PostScreen> {
                           Text("Description", style: textTheme.caption),
                           const SizedBox(height: 8.0),
                           Text(post.content),
-                          const SizedBox(height: 20.0),
-                          Text("Tags", style: textTheme.caption),
-                          const SizedBox(height: 4.0),
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: -5.0,
-                            children: post.tags.map(_buildChip).toList(),
-                          )
-                        ],
+                        ]
+                          ..addAll(post.info?.isNotEmpty ?? false
+                              ? [
+                                  const SizedBox(height: 20.0),
+                                  Text(
+                                    "Additional informations",
+                                    style: textTheme.caption,
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(post.info ?? ""),
+                                ]
+                              : [])
+                          ..addAll([
+                            const SizedBox(height: 20.0),
+                            Text("Tags", style: textTheme.caption),
+                            const SizedBox(height: 4.0),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: -5.0,
+                              children: post.tags.map(_buildChip).toList(),
+                            )
+                          ]),
                       ),
                     ),
                     CustomCard(

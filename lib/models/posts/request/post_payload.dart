@@ -4,6 +4,7 @@ import 'package:discover/models/tags/tag.dart';
 
 class PostPayload {
   String content;
+  String infos;
   String imageUrl;
   double latitude;
   double longitude;
@@ -11,6 +12,7 @@ class PostPayload {
 
   PostPayload({
     this.content,
+    this.infos,
     this.imageUrl,
     this.latitude,
     this.longitude,
@@ -20,6 +22,8 @@ class PostPayload {
   String toRawJson() => json.encode(toJson());
 
   Map<String, dynamic> toJson() => {
+        "content_post": content,
+        "info_post": infos,
         "content_post": content,
         "image_url": imageUrl,
         "latitude_post": latitude?.toString(),

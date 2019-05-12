@@ -56,6 +56,7 @@ String getDistance(int distance) {
 }
 
 void showErrorDialog(BuildContext context, dynamic error) {
+  if (context == null) return;
   showDialog(
     context: context,
     builder: (dialogCtx) {
