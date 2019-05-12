@@ -26,12 +26,14 @@ class MainPostListState extends State<MainPostList> {
 
   Future<void> _fetchPosts() async {
     if (!mounted || _fetch.isLoading) return;
+    _refreshKey.currentState?.show();
     setState(() => _fetch.isLoading = true);
 
     try {
       final prefs = PreferencesProvider.of(context);
       _fetch.data = await Api().getPostByLocation(
         PostsLocationPayload(
+          sortMode: prefs.getSortMode(),
           latitude: prefs.getUserPos().latitude,
           longitude: prefs.getUserPos().longitude,
           distance: 200000,

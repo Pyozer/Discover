@@ -1,3 +1,4 @@
+import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/pref_key.dart';
@@ -36,6 +37,7 @@ class PreferencesProviderState extends State<PreferencesProvider> {
   bool _isPrefInit = false;
   Position _userPosition;
   User _user;
+  SortMode _sortMode;
 
   bool isLogin() => _user != null && _user.isValid;
 
@@ -58,6 +60,13 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     widget.prefs.setString(PrefKey.user, user.toRawJson());
   }
 
+  SortMode getSortMode() => _sortMode;
+
+  void setSortMode(SortMode sortMode, [bool state = false]) {
+    _setPref(() => _sortMode = sortMode, state);
+    widget.prefs.setString(PrefKey.sortMode, sortMode?.value);
+  }
+
   void initPreferences() {
     if (_isPrefInit) return;
     _userPosition = stringToPosition(
@@ -67,6 +76,7 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     if (userJson != null) {
       _user = User.fromRawJson(userJson);
     }
+    _sortMode = SortMode.fromValue(widget.prefs.getString(PrefKey.sortMode));
     _isPrefInit = true;
   }
 

@@ -1,3 +1,4 @@
+import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/screens/add_post_screen.dart';
 import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
@@ -20,7 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = PreferencesProvider.of(context).getUser();
+    final prefs = PreferencesProvider.of(context);
+    final user = prefs.getUser();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Discover"),
@@ -29,9 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.edit_location),
             onPressed: () {},
           ),
-          IconButton(
-            icon: Icon(Icons.sort),
-            onPressed: () {},
+          PopupMenuButton<SortMode>(
+            icon: const Icon(Icons.sort),
+            onSelected: (sortMode) {
+              prefs.setSortMode(sortMode, true);
+            },
+            itemBuilder: (BuildContext context) {
+              return SortMode.values.map((sortMode) {
+                return CheckedPopupMenuItem<SortMode>(
+                  checked: sortMode == prefs.getSortMode(),
+                  value: sortMode,
+                  child: Text("Sort by $sortMode"),
+                );
+              }).toList();
+            },
           ),
         ],
       ),
