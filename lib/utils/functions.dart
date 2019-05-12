@@ -38,7 +38,7 @@ String getTimeAgo(DateTime time) {
   if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
 
   final hours = diff.inHours;
-  if (hours < 60) return "$hours hour${hours > 1 ? "s" : ""} ago";
+  if (hours < 24) return "$hours hour${hours > 1 ? "s" : ""} ago";
 
   final days = diff.inDays;
   if (days < 30) return "$days day${days > 1 ? "s" : ""} ago";

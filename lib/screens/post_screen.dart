@@ -98,13 +98,17 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
-  Future<void>_goToPost() async{
-    final prefs = PreferencesProvider.of(context);
-    String googleUrl = "https://www.google.fr/maps/dir/${prefs.getUserPos().latitude},${prefs.getUserPos().longitude}/${_fetch.data.latitude},${_fetch.data.longitude}/@48.8750184,2.2405866,11z/";
+  Future<void> _openGoogleMapsRoute() async {
+    final userPos = PreferencesProvider.of(context).getUserPos();
+    String googleUrl =
+        "https://www.google.fr/maps/dir/${userPos.latitude},${userPos.longitude}/${_fetch.data.latitude},${_fetch.data.longitude}/";
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {
-      throw 'Could not open the map.';
+      showErrorDialog(
+        context,
+        Exception("Cannot open Google Maps to show the route"),
+      );
     }
   }
 
@@ -353,9 +357,7 @@ class _PostScreenState extends State<PostScreen> {
                               child: _buildHeaderIcon(
                                 icon: Icons.directions,
                                 text: post.distanceStr,
-                                onTap: () {
-                                  _goToPost();
-                                },
+                                onTap: _openGoogleMapsRoute,
                               ),
                             ),
                           ),
