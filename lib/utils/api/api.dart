@@ -13,7 +13,7 @@ import 'package:discover/utils/api/base_api.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Api extends BaseApi {
-  Api() : super("http://discover-api.herokuapp.com/api/");
+  Api() : super("https://discoverapi.herokuapp.com/api/");
 
   /// Register user
   Future<User> register(RegisterPayload payload) async {

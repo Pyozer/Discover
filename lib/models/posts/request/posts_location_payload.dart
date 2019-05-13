@@ -1,3 +1,5 @@
+import 'package:discover/models/tags/tag.dart';
+
 import '../sort_mode.dart';
 
 class PostsLocationPayload {
@@ -5,7 +7,7 @@ class PostsLocationPayload {
   double latitude;
   double longitude;
   int distance;
-  List<String> tags;
+  List<Tag> tags;
 
   PostsLocationPayload({
     this.sortMode,
@@ -20,6 +22,6 @@ class PostsLocationPayload {
         "latitude_user": latitude?.toString(),
         "longitude_user": longitude?.toString(),
         "distance": distance?.toString(),
-        "tags": tags?.join(','),
+        "tags": tags?.map((t) => t.id)?.join(','),
       }..removeWhere((_, val) => val == null);
 }

@@ -3,6 +3,7 @@ import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/posts/request/posts_location_payload.dart';
 import 'package:discover/models/posts/sort_mode.dart';
+import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/post_row.dart';
@@ -12,9 +13,16 @@ import 'package:geolocator/geolocator.dart';
 class MainPostList extends StatefulWidget {
   final Position userPos;
   final SortMode sortMode;
+  final double distance;
+  final List<Tag> tags;
 
-  MainPostList({Key key, @required this.userPos, @required this.sortMode})
-      : super(key: key);
+  MainPostList({
+    Key key,
+    @required this.userPos,
+    @required this.sortMode,
+    @required this.distance,
+    @required this.tags,
+  }) : super(key: key);
 
   @override
   MainPostListState createState() => MainPostListState();
@@ -35,7 +43,10 @@ class MainPostListState extends State<MainPostList> with AfterLayoutMixin {
     super.didUpdateWidget(oldWidget);
     final isSamePos = widget.userPos.toString() == oldWidget.userPos.toString();
     final isSameSort = widget.sortMode == oldWidget.sortMode;
-    if (!isSamePos || !isSameSort) _fetchPosts();
+    final isSameDistance = widget.distance == oldWidget.distance;
+    final isSameTags = widget.tags == oldWidget.tags;
+    if (!isSamePos || !isSameSort || !isSameDistance || !isSameTags)
+      _fetchPosts();
   }
 
   Future<void> _fetchPosts() async {
@@ -50,8 +61,8 @@ class MainPostListState extends State<MainPostList> with AfterLayoutMixin {
           sortMode: widget.sortMode,
           latitude: widget.userPos?.latitude,
           longitude: widget.userPos?.longitude,
-          distance: 200000,
-          tags: [],
+          distance: widget.distance.toInt(),
+          tags: widget.tags,
         ),
         prefs.getUser()?.token,
       );

@@ -7,8 +7,7 @@ import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
-import 'package:discover/widgets/post/tags_dialog.dart';
-import 'package:discover/widgets/ui/btn_colored.dart';
+import 'package:discover/widgets/tags/tags_selector.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
 import 'package:flutter/material.dart';
@@ -30,23 +29,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String _description = "";
   String _additionalInfo = "";
   Position _positionType = Position.GPS;
-  List<Tag> _tags = [];
   List<Tag> _selectedTags = [];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _fetchTags();
-  }
-
-  void _fetchTags() async {
-    try {
-      final tagsRes = await Api().getTags();
-      setState(() => _tags = tagsRes.tags);
-    } catch (e) {
-      showErrorDialog(context, e);
-    }
-  }
 
   Future<String> _uploadImage() async {
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
@@ -116,14 +99,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     final image = await ImagePicker.pickImage(source: source);
     setState(() => _image = image);
-  }
-
-  Future _openTagDialog() async {
-    List<Tag> newTags = await showDialog<List<Tag>>(
-      context: context,
-      builder: (_) => TagsDialog(tags: _tags, selectedTags: _selectedTags),
-    );
-    if (newTags != null) setState(() => _selectedTags = newTags);
   }
 
   @override
@@ -248,44 +223,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
                 CustomCard(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text("Tags", style: Theme.of(context).textTheme.caption),
-                      const SizedBox(height: 10.0),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: -6.0,
-                        children: List.generate(
-                          _selectedTags.length,
-                          (i) {
-                            return Chip(
-                              label: Text(
-                                _selectedTags[i].name,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              onDeleted: () {
-                                setState(() {
-                                  _selectedTags.remove(_selectedTags[i]);
-                                });
-                              },
-                              deleteIcon: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                              ),
-                              backgroundColor: Colors.grey[600],
-                            );
-                          },
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: BtnColored(
-                          text: "Edit tags",
-                          onPressed: _openTagDialog,
-                        ),
-                      ),
-                    ],
+                  child: TagsSelector(
+                    selectedTags: _selectedTags,
+                    onTagsChanged: (tags) {
+                      setState(() => _selectedTags = tags);
+                    },
                   ),
                 ),
               ],

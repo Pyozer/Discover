@@ -1,5 +1,6 @@
 import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/screens/add_post_screen.dart';
+import 'package:discover/screens/filters_screen.dart';
 import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
@@ -49,6 +50,15 @@ class _HomeScreenState extends State<HomeScreen>
       appBar: AppBar(
         title: Text("Discover"),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => FiltersScreen(),
+                fullscreenDialog: true,
+              ));
+            },
+          ),
           PopupMenuButton<bool>(
             icon: const Icon(Icons.edit_location),
             onSelected: (isCustomPos) async {
@@ -73,8 +83,9 @@ class _HomeScreenState extends State<HomeScreen>
                 return CheckedPopupMenuItem<bool>(
                   checked: isCustomPos == prefs.isCustomPos(),
                   value: isCustomPos,
-                  child:
-                      Text(isCustomPos ? "Selected position" : "GPS Position"),
+                  child: Text(
+                    isCustomPos ? "Selected position" : "GPS Position",
+                  ),
                 );
               }).toList();
             },
@@ -111,6 +122,8 @@ class _HomeScreenState extends State<HomeScreen>
                         key: _listKey,
                         userPos: prefs.getUserPos(),
                         sortMode: prefs.getSortMode(),
+                        distance: prefs.getFilterDistance(),
+                        tags: prefs.getFilterTags(),
                       ),
                     ),
                   ],

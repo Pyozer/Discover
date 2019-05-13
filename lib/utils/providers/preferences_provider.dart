@@ -1,4 +1,5 @@
 import 'package:discover/models/posts/sort_mode.dart';
+import 'package:discover/models/tags/tag.dart';
 import 'package:discover/models/users/user.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/pref_key.dart';
@@ -39,6 +40,8 @@ class PreferencesProviderState extends State<PreferencesProvider> {
   bool _isCustomPos;
   User _user;
   SortMode _sortMode;
+  double _filterDistance;
+  List<Tag> _filterTags;
 
   bool isLogin() => _user != null && _user.isValid;
 
@@ -73,6 +76,23 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     widget.prefs.setString(PrefKey.sortMode, sortMode?.value);
   }
 
+  double getFilterDistance() => _filterDistance ?? 300.0;
+
+  void setFilterDistance(double distance, [bool state = false]) {
+    _setPref(() => _filterDistance = distance, state);
+    widget.prefs.setDouble(PrefKey.filterDistance, distance);
+  }
+
+  List<Tag> getFilterTags() => _filterTags ?? [];
+
+  void setFilterTags(List<Tag> tags, [bool state = false]) {
+    _setPref(() => _filterTags = tags, state);
+    widget.prefs.setStringList(
+      PrefKey.filterTags,
+      tags.map((t) => t.toRawJson()).toList(),
+    );
+  }
+
   void initPreferences() {
     if (_isPrefInit) return;
     _userPosition = stringToPosition(
@@ -84,6 +104,12 @@ class PreferencesProviderState extends State<PreferencesProvider> {
       _user = User.fromRawJson(userJson);
     }
     _sortMode = SortMode.fromValue(widget.prefs.getString(PrefKey.sortMode));
+    _filterDistance = widget.prefs.getDouble(PrefKey.filterDistance);
+    _filterTags = widget.prefs
+            .getStringList(PrefKey.filterTags)
+            ?.map((s) => Tag.fromRawJson(s))
+            ?.toList() ??
+        [];
     _isPrefInit = true;
   }
 
