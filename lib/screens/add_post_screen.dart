@@ -16,6 +16,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_amazon_s3/flutter_amazon_s3.dart';
+import 'package:uuid/uuid.dart';
 
 enum Position { GPS, CUSTOM }
 
@@ -38,7 +39,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       _image.path,
       'discoverstorage',
       'eu-west-1:19e56073-5b37-4cdf-bdcd-215edbf2c1d1',
-      _image.path.split('/').last, //TODO: Generate UUID
+      "${Uuid().v1()}.jpg",
     );
     if (!uploadedImageUrl.contains("s3-eu-west-1"))
       throw CustomError("Error during sending image..");

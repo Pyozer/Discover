@@ -33,6 +33,7 @@ dependencies:
   url_launcher: ^5.0.1
   after_layout: ^1.0.7
   cached_network_image: ^0.8.0
+  uuid: ^2.0.1
 
 dev_dependencies:
   flutter_test:
