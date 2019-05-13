@@ -41,6 +41,67 @@ class _HomeScreenState extends State<HomeScreen>
     return userPos;
   }
 
+  List<Widget> _buildAppActions() {
+    final prefs = PreferencesProvider.of(context);
+    return [
+      IconButton(
+        icon: const Icon(Icons.filter_list),
+        onPressed: () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => FiltersScreen(),
+            fullscreenDialog: true,
+          ));
+        },
+      ),
+      PopupMenuButton<bool>(
+        icon: const Icon(Icons.edit_location),
+        onSelected: (isCustomPos) async {
+          if (isCustomPos) {
+            // If custom position choosed
+            final userPos = await _openLocationPicker();
+            if (userPos != null) {
+              // If popup not cancelled
+              prefs.setUserPosition(userPos);
+              prefs.setCustomPos(isCustomPos, true);
+              return;
+            }
+          }
+          final gpsPos = await Geolocator.Geolocator().getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+          prefs.setCustomPos(false);
+          prefs.setUserPosition(gpsPos, true);
+        },
+        itemBuilder: (BuildContext context) {
+          return [false, true].map((isCustomPos) {
+            return CheckedPopupMenuItem<bool>(
+              checked: isCustomPos == prefs.isCustomPos(),
+              value: isCustomPos,
+              child: Text(
+                isCustomPos ? "Selected position" : "GPS Position",
+              ),
+            );
+          }).toList();
+        },
+      ),
+      PopupMenuButton<SortMode>(
+        icon: const Icon(Icons.sort),
+        onSelected: (sortMode) {
+          prefs.setSortMode(sortMode, true);
+        },
+        itemBuilder: (BuildContext context) {
+          return SortMode.values.map((sortMode) {
+            return CheckedPopupMenuItem<SortMode>(
+              checked: sortMode == prefs.getSortMode(),
+              value: sortMode,
+              child: Text("Sort by $sortMode"),
+            );
+          }).toList();
+        },
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final prefs = PreferencesProvider.of(context);
@@ -49,63 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text("Discover"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => FiltersScreen(),
-                fullscreenDialog: true,
-              ));
-            },
-          ),
-          PopupMenuButton<bool>(
-            icon: const Icon(Icons.edit_location),
-            onSelected: (isCustomPos) async {
-              if (isCustomPos) {
-                // If custom position choosed
-                final userPos = await _openLocationPicker();
-                if (userPos != null) {
-                  // If popup not cancelled
-                  prefs.setUserPosition(userPos);
-                  prefs.setCustomPos(isCustomPos, true);
-                  return;
-                }
-              }
-              final gpsPos = await Geolocator.Geolocator().getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high,
-              );
-              prefs.setCustomPos(false);
-              prefs.setUserPosition(gpsPos, true);
-            },
-            itemBuilder: (BuildContext context) {
-              return [false, true].map((isCustomPos) {
-                return CheckedPopupMenuItem<bool>(
-                  checked: isCustomPos == prefs.isCustomPos(),
-                  value: isCustomPos,
-                  child: Text(
-                    isCustomPos ? "Selected position" : "GPS Position",
-                  ),
-                );
-              }).toList();
-            },
-          ),
-          PopupMenuButton<SortMode>(
-            icon: const Icon(Icons.sort),
-            onSelected: (sortMode) {
-              prefs.setSortMode(sortMode, true);
-            },
-            itemBuilder: (BuildContext context) {
-              return SortMode.values.map((sortMode) {
-                return CheckedPopupMenuItem<SortMode>(
-                  checked: sortMode == prefs.getSortMode(),
-                  value: sortMode,
-                  child: Text("Sort by $sortMode"),
-                );
-              }).toList();
-            },
-          ),
-        ],
+        actions: _currentIndex == 0 ? _buildAppActions() : [],
       ),
       body: IndexedStack(
         index: _currentIndex,

@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discover/models/posts/post.dart';
 import 'package:discover/screens/post_screen.dart';
-import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
@@ -58,11 +58,15 @@ class PostRow extends StatelessWidget {
             },
             child: Hero(
               tag: post.id,
-              child: FadeInImage.assetNetwork(
-                image: post.photo,
+              child: CachedNetworkImage(
+                imageUrl: post.photo,
                 height: 250,
-                placeholder: AssetKey.placeholderPost,
+                placeholder: (_, __) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (_, __, ___) =>
+                    const Center(child: Icon(Icons.error)),
                 fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
             ),
           ),

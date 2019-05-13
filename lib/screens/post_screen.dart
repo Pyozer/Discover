@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discover/models/comments/comment.dart';
 import 'package:discover/models/comments/request/comment_payload.dart';
 import 'package:discover/models/fetch_data.dart';
@@ -5,7 +6,6 @@ import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
-import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/post/comment_row.dart';
@@ -206,12 +206,16 @@ class _PostScreenState extends State<PostScreen> {
           children: [
             Hero(
               tag: post.id,
-              child: FadeInImage.assetNetwork(
-                image: post.photo,
-                fit: BoxFit.cover,
+              child: CachedNetworkImage(
+                imageUrl: post.photo,
                 height: screenSize.height / 3.5,
                 width: screenSize.width,
-                placeholder: AssetKey.placeholderPost,
+                placeholder: (_, __) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (_, __, ___) =>
+                    const Center(child: Icon(Icons.error)),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
             ),
             AppBar(

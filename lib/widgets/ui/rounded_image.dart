@@ -1,5 +1,6 @@
 import 'package:discover/utils/keys/asset_key.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RoundedImage extends StatelessWidget {
   final String imageUrl;
@@ -31,12 +32,14 @@ class RoundedImage extends StatelessWidget {
                 height: size.height,
                 fit: BoxFit.cover,
               )
-            : FadeInImage.assetNetwork(
-                image: imageUrl,
-                width: size.width,
-                height: size.height,
+            : CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (_, __) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (_, __, ___) =>
+                    const Center(child: Icon(Icons.error)),
                 fit: BoxFit.cover,
-                placeholder: placeholder,
+                alignment: Alignment.center,
               ),
       ),
     );
