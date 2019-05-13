@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:discover/models/custom_error.dart';
 import 'package:discover/models/posts/request/post_payload.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/screens/post_screen.dart';
@@ -30,6 +31,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String _additionalInfo = "";
   Position _positionType = Position.GPS;
   List<Tag> _selectedTags = [];
+  bool _isLoading = false;
 
   Future<String> _uploadImage() async {
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
@@ -39,7 +41,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       _image.path.split('/').last, //TODO: Generate UUID
     );
     if (!uploadedImageUrl.contains("s3-eu-west-1"))
-      throw Exception("Error during sending image..");
+      throw CustomError("Error during sending image..");
     return uploadedImageUrl;
   }
 
@@ -55,6 +57,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
 
     try {
+      setState(() => _isLoading = true);
       String imageUrl = await _uploadImage();
       final prefs = PreferencesProvider.of(context);
       final response = await Api().addPost(
@@ -76,6 +79,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         Navigator.of(context).pop();
     } catch (e) {
       showErrorDialog(context, e);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -246,8 +250,18 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _sendPost,
-        icon: const Icon(Icons.send),
+        onPressed: _isLoading ? null : _sendPost,
+        backgroundColor: _isLoading ? Colors.grey[600] : null,
+        icon: _isLoading
+            ? SizedBox(
+                width: 17,
+                height: 17,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : const Icon(Icons.send),
         label: Text("Send post"),
       ),
     );
