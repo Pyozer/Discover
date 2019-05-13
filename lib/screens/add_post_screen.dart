@@ -32,6 +32,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
   List<Tag> _selectedTags = [];
 
   Future<String> _uploadImage() async {
+    if (_image.path == null){
+      showErrorDialog(context, "You must fonctionner ta race");
+    }
+    
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
       _image.path,
       'discoverstorage',
@@ -58,12 +62,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
         prefs.getUser()?.token,
       );
-      if ((response.posts?.first?.id ?? null) != null)
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => PostScreen(postId: response.posts.first.id),
-        ));
-      else
-        Navigator.of(context).pop();
+      if (_description.length < 1) {
+        showErrorDialog(context, "You must provide a description");
+      } else {
+        if ((response.posts?.first?.id ?? null) != null)
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => PostScreen(postId: response.posts.first.id),
+          ));
+        else
+          Navigator.of(context).pop();
+      }
     } catch (e) {
       showErrorDialog(context, e);
     }
