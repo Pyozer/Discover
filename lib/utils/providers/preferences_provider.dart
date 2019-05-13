@@ -36,14 +36,13 @@ class PreferencesProvider extends StatefulWidget {
 class PreferencesProviderState extends State<PreferencesProvider> {
   bool _isPrefInit = false;
   Position _userPosition;
+  bool _isCustomPos;
   User _user;
   SortMode _sortMode;
 
   bool isLogin() => _user != null && _user.isValid;
 
-  Position getUserPos() {
-    return _userPosition ?? Position(latitude: 48.789311, longitude: 2.363550);
-  }
+  Position getUserPos() => _userPosition;
 
   void setUserPosition(Position userPosition, [bool state = false]) {
     _setPref(() => _userPosition = userPosition, state);
@@ -51,6 +50,13 @@ class PreferencesProviderState extends State<PreferencesProvider> {
       PrefKey.lastUserPos,
       positionToJsonString(userPosition),
     );
+  }
+
+  bool isCustomPos() => _isCustomPos ?? false;
+
+  void setCustomPos(bool isCustomPos, [bool state = false]) {
+    _setPref(() => _isCustomPos = isCustomPos, state);
+    widget.prefs.setBool(PrefKey.isCustomPos, isCustomPos);
   }
 
   User getUser() => _user;
@@ -72,6 +78,7 @@ class PreferencesProviderState extends State<PreferencesProvider> {
     _userPosition = stringToPosition(
       widget.prefs.getString(PrefKey.lastUserPos),
     );
+    _isCustomPos = widget.prefs.getBool(PrefKey.isCustomPos);
     String userJson = widget.prefs.getString(PrefKey.user);
     if (userJson != null) {
       _user = User.fromRawJson(userJson);

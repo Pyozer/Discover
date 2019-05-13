@@ -4,9 +4,13 @@ import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/list/main_post_list.dart';
+import 'package:discover/widgets/place_selector.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' as Geolocator;
+import 'package:after_layout/after_layout.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -15,9 +19,26 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AfterLayoutMixin<HomeScreen> {
   final _listKey = GlobalKey<MainPostListState>();
   int _currentIndex = 0;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    if (PreferencesProvider.of(context).getUserPos() == null)
+      _openLocationPicker();
+  }
+
+  Future<Geolocator.Position> _openLocationPicker() async {
+    final userPos = await showDialog<Geolocator.Position>(
+      context: context,
+      builder: (dialogContext) =>
+          PlaceSelector(onDone: Navigator.of(dialogContext).pop),
+    );
+    if (userPos == null) return null;
+    return userPos;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +49,35 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("Discover"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.edit_location),
-            onPressed: () {},
+          PopupMenuButton<bool>(
+            icon: const Icon(Icons.edit_location),
+            onSelected: (isCustomPos) async {
+              if (isCustomPos) {
+                // If custom position choosed
+                final userPos = await _openLocationPicker();
+                if (userPos != null) {
+                  // If popup not cancelled
+                  prefs.setUserPosition(userPos);
+                  prefs.setCustomPos(isCustomPos, true);
+                  return;
+                }
+              }
+              final gpsPos = await Geolocator.Geolocator().getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+              );
+              prefs.setCustomPos(false);
+              prefs.setUserPosition(gpsPos, true);
+            },
+            itemBuilder: (BuildContext context) {
+              return [false, true].map((isCustomPos) {
+                return CheckedPopupMenuItem<bool>(
+                  checked: isCustomPos == prefs.isCustomPos(),
+                  value: isCustomPos,
+                  child:
+                      Text(isCustomPos ? "Selected position" : "GPS Position"),
+                );
+              }).toList();
+            },
           ),
           PopupMenuButton<SortMode>(
             icon: const Icon(Icons.sort),
@@ -52,8 +99,23 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          MainPostList(key: _listKey),
-          MapScreen(),
+          prefs.getUserPos() == null
+              ? Container()
+              : Column(
+                  children: [
+                    prefs.isCustomPos()
+                        ? Container(child: Text("Custom position selected"))
+                        : const SizedBox.shrink(),
+                    Expanded(
+                      child: MainPostList(
+                        key: _listKey,
+                        userPos: prefs.getUserPos(),
+                        sortMode: prefs.getSortMode(),
+                      ),
+                    ),
+                  ],
+                ),
+          MapScreen(userPos: prefs.getUserPos(), sortMode: prefs.getSortMode()),
         ],
       ),
       drawer: Drawer(

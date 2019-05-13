@@ -1,31 +1,45 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:discover/models/fetch_data.dart';
 import 'package:discover/models/posts/posts_response.dart';
 import 'package:discover/models/posts/request/posts_location_payload.dart';
+import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/widgets/post/post_row.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MainPostList extends StatefulWidget {
-  MainPostList({Key key}) : super(key: key);
+  final Position userPos;
+  final SortMode sortMode;
+
+  MainPostList({Key key, @required this.userPos, @required this.sortMode})
+      : super(key: key);
 
   @override
   MainPostListState createState() => MainPostListState();
 }
 
-class MainPostListState extends State<MainPostList> {
-  final _fetch = FetchData<PostsResponse>();
+class MainPostListState extends State<MainPostList> with AfterLayoutMixin {
+  final _fetch = FetchData<PostsResponse>(isLoading: true);
   final _controller = ScrollController();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void afterFirstLayout(BuildContext coontext) {
     _fetchPosts();
   }
 
+  @override
+  void didUpdateWidget(MainPostList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final isSamePos = widget.userPos.toString() == oldWidget.userPos.toString();
+    final isSameSort = widget.sortMode == oldWidget.sortMode;
+    if (!isSamePos || !isSameSort) _fetchPosts();
+  }
+
   Future<void> _fetchPosts() async {
-    if (!mounted || _fetch.isLoading) return;
+    if (!mounted) return;
     _refreshKey.currentState?.show();
     setState(() => _fetch.isLoading = true);
 
@@ -33,9 +47,9 @@ class MainPostListState extends State<MainPostList> {
       final prefs = PreferencesProvider.of(context);
       _fetch.data = await Api().getPostByLocation(
         PostsLocationPayload(
-          sortMode: prefs.getSortMode(),
-          latitude: prefs.getUserPos().latitude,
-          longitude: prefs.getUserPos().longitude,
+          sortMode: widget.sortMode,
+          latitude: widget.userPos?.latitude,
+          longitude: widget.userPos?.longitude,
           distance: 200000,
           tags: [],
         ),
@@ -64,7 +78,7 @@ class MainPostListState extends State<MainPostList> {
     if (!_fetch.hasData && _fetch.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    if (_fetch.data.posts?.isEmpty ?? true) {
+    if (_fetch.data?.posts?.isEmpty ?? true) {
       return Center(child: Text("Empty"));
     }
 

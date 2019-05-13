@@ -47,7 +47,7 @@ abstract class BaseApi {
     try {
       return await httpRequest;
     } catch (_) {
-      throw CustomError("Error server response");
+      throw CustomError("Cannot connect to server, check your internet connection.");
     }
   }
 

@@ -25,11 +25,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initUserPosition() async {
+    final prefs = PreferencesProvider.of(context);
+    if (prefs.isCustomPos() && prefs.getUserPos() != null)
+      return prefs.getUserPos();
+
     Position position = await Future.any([
       _getTimeoutPosition(),
       Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
     ]);
-    PreferencesProvider.of(context).setUserPosition(position);
+    prefs.setUserPosition(position);
   }
 
   Future<Position> _getTimeoutPosition() async {

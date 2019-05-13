@@ -13,7 +13,7 @@ import 'package:discover/utils/api/base_api.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Api extends BaseApi {
-  Api() : super("https://discoverapi.herokuapp.com/api/");
+  Api() : super("http://discover-api.herokuapp.com/api/");
 
   /// Register user
   Future<User> register(RegisterPayload payload) async {
@@ -95,7 +95,7 @@ class Api extends BaseApi {
   }
 
   /// Add comment
-  Future<CommentsResponse> addComment(
+  Future<ResultResponse> addComment(
     int idPost,
     CommentPayLoad payload,
     String token,
@@ -105,7 +105,7 @@ class Api extends BaseApi {
       token: token,
       body: payload.toRawJson(),
     );
-    return CommentsResponse.fromJson(getWithBaseData(response));
+    return ResultResponse.fromJson(getWithBaseData(response));
   }
 
   /// Delete comment
