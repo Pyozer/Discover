@@ -1,5 +1,16 @@
 PODS:
+  - AWSCore (2.9.8)
+  - AWSS3 (2.9.8):
+    - AWSCore (= 2.9.8)
   - Flutter (1.0.0)
+  - flutter_amazon_s3 (0.0.1):
+    - AWSCore
+    - AWSS3
+    - Flutter
+  - geolocator (4.0.3):
+    - Flutter
+  - google_api_availability (2.0.0):
+    - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
     - GoogleMaps
@@ -10,35 +21,63 @@ PODS:
     - GoogleMaps/Base
   - image_picker (0.0.1):
     - Flutter
+  - location_permissions (2.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
+    - Flutter
+  - url_launcher (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_amazon_s3 (from `.symlinks/plugins/flutter_amazon_s3/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
+  - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AWSCore
+    - AWSS3
     - GoogleMaps
 
 EXTERNAL SOURCES:
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_amazon_s3:
+    :path: ".symlinks/plugins/flutter_amazon_s3/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
+  google_api_availability:
+    :path: ".symlinks/plugins/google_api_availability/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  location_permissions:
+    :path: ".symlinks/plugins/location_permissions/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
+  AWSCore: 5da86c5afde44a87b06a2df50601bca81a8cee13
+  AWSS3: a5e12eb2495bbe49cda8b0595fa77280aacd7d3d
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_amazon_s3: a6d75912a54c3aacb9373bad55ddc9ecacc22a52
+  geolocator: 42437f4ba1897906a040c826678815c059b22c80
+  google_api_availability: f07cd62cdd46ec432b95a702e35e558b817e05aa
   google_maps_flutter: 924970f41ec509a201b593548db005efb2a09ee9
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
+  location_permissions: db47e77cf4f1359866d627523fb7812899a752f3
   shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
 
 PODFILE CHECKSUM: ebd43b443038e611b86ede96e613bd6033c49497
 
