@@ -75,12 +75,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
         prefs.getUser()?.token,
       );
-      if ((response.posts?.first?.id ?? null) != null)
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => PostScreen(postId: response.posts.first.id),
-        ));
-      else
-        Navigator.of(context).pop();
+      if (_description.length < 1) {
+        showErrorDialog(context, "You must provide a description");
+      } else {
+        if ((response.posts?.first?.id ?? null) != null)
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => PostScreen(postId: response.posts.first.id),
+          ));
+        else
+          Navigator.of(context).pop();
+      }
     } catch (e) {
       showErrorDialog(context, e);
     }
