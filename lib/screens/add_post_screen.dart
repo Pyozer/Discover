@@ -49,15 +49,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<String> _uploadImage() async {
-    if (_image.path == null){
-      showErrorDialog(context, "You must fonctionner ta race");
-    }
-    
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
       _image.path,
       'discoverstorage',
       'eu-west-1:19e56073-5b37-4cdf-bdcd-215edbf2c1d1',
-      _image.path.split('/').last,
+      _image.path.split('/').last, //TODO: Generate UUID
     );
     if (!uploadedImageUrl.contains("s3-eu-west-1"))
       throw Exception("Error during sending image..");
@@ -65,6 +61,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<void> _sendPost() async {
+    if ((_image?.path ?? null) == null) {
+      return showErrorDialog(context, "You must provide an image");
+    }
+    if (_description.trim().isEmpty) {
+      return showErrorDialog(context, "You must provide a description");
+    }
+    if (_selectedTags.length < 1) {
+      return showErrorDialog(context, "You must provide at least one tag");
+    }
+
     try {
       String imageUrl = await _uploadImage();
       final prefs = PreferencesProvider.of(context);
@@ -79,16 +85,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
         prefs.getUser()?.token,
       );
-      if (_description.length < 1) {
-        showErrorDialog(context, "You must provide a description");
-      } else {
-        if ((response.posts?.first?.id ?? null) != null)
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => PostScreen(postId: response.posts.first.id),
-          ));
-        else
-          Navigator.of(context).pop();
-      }
+      if ((response.posts?.first?.id ?? null) != null)
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => PostScreen(postId: response.posts.first.id),
+        ));
+      else
+        Navigator.of(context).pop();
     } catch (e) {
       showErrorDialog(context, e);
     }
