@@ -49,6 +49,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<String> _uploadImage() async {
+    if (_image.path == null){
+      showErrorDialog(context, "You must fonctionner ta race");
+    }
+    
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
       _image.path,
       'discoverstorage',
