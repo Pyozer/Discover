@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formSignInKey = GlobalKey<FormState>();
   final _formSignUpKey = GlobalKey<FormState>();
+  bool _isLoginLoading = false;
+  bool _isRegisterLoading = false;
 
   // Login
   final _focusPwdLogin = FocusNode();
@@ -196,14 +198,23 @@ class _LoginPageState extends State<LoginScreen>
     return GradientButton(
       increaseHeightBy: 12,
       increaseWidthBy: 80,
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontFamily: "WorkSansBold",
-        ),
-      ),
+      child: onPressed == null
+          ? SizedBox(
+              width: 17,
+              height: 17,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontFamily: "WorkSansBold",
+              ),
+            ),
       callback: onPressed,
       gradient: Gradients.hotLinear,
     );
@@ -247,7 +258,10 @@ class _LoginPageState extends State<LoginScreen>
             ),
           ),
         ),
-        Positioned(top: 130.0, child: _buildBtn('Login', _onSignIn)),
+        Positioned(
+          top: 130.0,
+          child: _buildBtn('Login', _isLoginLoading ? null : _onSignIn),
+        ),
       ],
     );
   }
@@ -316,7 +330,10 @@ class _LoginPageState extends State<LoginScreen>
         ),
         Positioned(
           top: 310.0,
-          child: _buildBtn(i18n.text(StrKey.register), _onSignUp),
+          child: _buildBtn(
+            i18n.text(StrKey.register),
+            _isRegisterLoading ? null : _onSignUp,
+          ),
         ),
       ],
     );
@@ -343,6 +360,7 @@ class _LoginPageState extends State<LoginScreen>
     }
 
     try {
+      setState(() => _isLoginLoading = true);
       User response = await Api().login(
         LoginPayload(email: email, password: pwd),
       );
@@ -353,6 +371,7 @@ class _LoginPageState extends State<LoginScreen>
       );
     } catch (e) {
       showErrorDialog(context, e);
+      if (mounted) setState(() => _isLoginLoading = false);
     }
   }
 
@@ -381,6 +400,7 @@ class _LoginPageState extends State<LoginScreen>
     }
 
     try {
+      setState(() => _isRegisterLoading = true);
       User response = await Api().register(RegisterPayload(
         email: email,
         password: pwd,
@@ -394,6 +414,7 @@ class _LoginPageState extends State<LoginScreen>
       );
     } catch (e) {
       showErrorDialog(context, e);
+      if (mounted) setState(() => _isRegisterLoading = false);
     }
   }
 }
