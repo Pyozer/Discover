@@ -5,7 +5,9 @@ import 'package:discover/models/posts/request/posts_location_payload.dart';
 import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/post/post_row.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -90,7 +92,7 @@ class MainPostListState extends State<MainPostList> with AfterLayoutMixin {
       return Center(child: CircularProgressIndicator());
     }
     if (_fetch.data?.posts?.isEmpty ?? true) {
-      return Center(child: Text("Empty"));
+      return Center(child: Text(i18n.text(StrKey.empty)));
     }
 
     return RefreshIndicator(

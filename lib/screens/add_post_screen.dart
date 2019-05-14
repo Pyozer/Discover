@@ -7,7 +7,9 @@ import 'package:discover/screens/post_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/asset_key.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/tags/tags_selector.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
@@ -42,19 +44,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
       "${Uuid().v1()}.jpg",
     );
     if (!uploadedImageUrl.contains("s3-eu-west-1"))
-      throw CustomError("Error during sending image..");
+      throw CustomError(i18n.text(StrKey.errorSendingImage));
     return uploadedImageUrl;
   }
 
   Future<void> _sendPost() async {
     if ((_image?.path ?? null) == null) {
-      return showErrorDialog(context, "You must provide an image");
+      return showErrorDialog(context, i18n.text(StrKey.errorEmptyImage));
     }
     if (_description.trim().isEmpty) {
-      return showErrorDialog(context, "You must provide a description");
+      return showErrorDialog(context, i18n.text(StrKey.description));
     }
     if (_selectedTags.length < 1) {
-      return showErrorDialog(context, "You must provide at least one tag");
+      return showErrorDialog(context, i18n.text(StrKey.errorMinimumOneTag));
     }
 
     try {
@@ -94,13 +96,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Text("Camera"),
+                title: Text(i18n.text(StrKey.camera)),
                 onTap: () {
                   Navigator.of(dialogContext).pop(ImageSource.camera);
                 },
               ),
               ListTile(
-                title: Text("Gallery"),
+                title: Text(i18n.text(StrKey.gallery)),
                 onTap: () {
                   Navigator.of(dialogContext).pop(ImageSource.gallery);
                 },
@@ -124,7 +126,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text("Add post"),
+        title: Text(i18n.text(StrKey.addPost)),
         centerTitle: true,
       ),
       body: Stack(
@@ -171,7 +173,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text("Description", style: textTheme.caption),
+                      Text(i18n.text(StrKey.description),
+                          style: textTheme.caption),
                       TextField(
                         maxLines: 7,
                         minLines: 4,
@@ -183,7 +186,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      Text("Additional informations", style: textTheme.caption),
+                      Text(i18n.text(StrKey.addtionalInfo),
+                          style: textTheme.caption),
                       TextField(
                         maxLines: 6,
                         minLines: 2,
@@ -206,14 +210,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          "Post location",
+                          i18n.text(StrKey.postLocation),
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ),
                       const SizedBox(height: 10.0),
                       RadioListTile<Position>(
                         title: Text(
-                          "Custom position",
+                          i18n.text(StrKey.customPosition),
                           style: const TextStyle(fontSize: 15),
                         ),
                         value: Position.CUSTOM,
@@ -224,7 +228,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       ),
                       RadioListTile<Position>(
                         title: Text(
-                          "My actual position",
+                          i18n.text(StrKey.actualPosition),
                           style: const TextStyle(fontSize: 15),
                         ),
                         value: Position.GPS,
@@ -263,7 +267,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
               )
             : const Icon(Icons.send),
-        label: Text("Send post"),
+        label: Text(i18n.text(StrKey.sendPost)),
       ),
     );
   }

@@ -3,7 +3,9 @@ import 'package:discover/screens/add_post_screen.dart';
 import 'package:discover/screens/filters_screen.dart';
 import 'package:discover/screens/login_screen.dart';
 import 'package:discover/screens/map_screen.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/list/main_post_list.dart';
 import 'package:discover/widgets/place_selector.dart';
 import 'package:discover/widgets/user/user_image.dart';
@@ -77,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen>
             return CheckedPopupMenuItem<bool>(
               checked: isCustomPos == prefs.isCustomPos(),
               value: isCustomPos,
-              child: Text(
-                isCustomPos ? "Selected position" : "GPS Position",
-              ),
+              child: Text(i18n.text(
+                isCustomPos ? StrKey.selectedPosition : StrKey.gpsPosition,
+              )),
             );
           }).toList();
         },
@@ -94,7 +96,9 @@ class _HomeScreenState extends State<HomeScreen>
             return CheckedPopupMenuItem<SortMode>(
               checked: sortMode == prefs.getSortMode(),
               value: sortMode,
-              child: Text("Sort by $sortMode"),
+              child: Text(
+                i18n.text(StrKey.sortBy, {'sort': sortMode.toString()}),
+              ),
             );
           }).toList();
         },
@@ -120,7 +124,11 @@ class _HomeScreenState extends State<HomeScreen>
               : Column(
                   children: [
                     prefs.isCustomPos()
-                        ? Container(child: Text("Custom position selected"))
+                        ? Container(
+                            child: Text(
+                              i18n.text(StrKey.customPositionSelected),
+                            ),
+                          )
                         : const SizedBox.shrink(),
                     Expanded(
                       child: MainPostList(
@@ -151,34 +159,34 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             const SizedBox(height: 30.0),
             ListTile(
-              title: Text("My Account"),
+              title: Text(i18n.text(StrKey.myAccount)),
               leading: Icon(Icons.person),
               enabled: false,
             ),
             ListTile(
-              title: Text("Search user"),
+              title: Text(i18n.text(StrKey.searchUser)),
               leading: Icon(Icons.search),
               enabled: false,
             ),
             const Divider(),
             ListTile(
-              title: Text("About"),
+              title: Text(i18n.text(StrKey.about)),
               leading: Icon(Icons.info_outline),
               enabled: false,
             ),
             ListTile(
-              title: Text("Introduction"),
+              title: Text(i18n.text(StrKey.onboarding)),
               leading: Icon(Icons.view_carousel),
               enabled: false,
             ),
             ListTile(
-              title: Text("Feedback"),
+              title: Text(i18n.text(StrKey.feedback)),
               leading: Icon(Icons.feedback),
               enabled: false,
             ),
             const Divider(),
             ListTile(
-              title: Text("Logout"),
+              title: Text(i18n.text(StrKey.logout)),
               leading: Icon(Icons.exit_to_app),
               onTap: () {
                 Navigator.of(context).pushAndRemoveUntil(
@@ -208,12 +216,12 @@ class _HomeScreenState extends State<HomeScreen>
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            title: Text("All posts"),
+            icon: const Icon(Icons.location_on),
+            title: Text(i18n.text(StrKey.allPosts)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text("Map"),
+            icon: const Icon(Icons.map),
+            title: Text(i18n.text(StrKey.map)),
           ),
         ],
       ),

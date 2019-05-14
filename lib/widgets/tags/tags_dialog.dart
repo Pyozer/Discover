@@ -1,4 +1,6 @@
 import 'package:discover/models/tags/tag.dart';
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,7 @@ class _TagsDialogState extends State<TagsDialog> {
   @override
   Widget build(BuildContext context) {
     return CustomAlertDialog(
-      title: "Choose tags",
+      title: i18n.text(StrKey.chooseTags),
       contentPadding: false,
       content: Expanded(
         child: ListView.builder(
@@ -51,9 +53,9 @@ class _TagsDialogState extends State<TagsDialog> {
           },
         ),
       ),
-      positiveBtn: "Save",
+      positiveBtn: i18n.text(StrKey.save),
       onPositive: () => Navigator.of(context).pop(_selectedTags),
-      negativeBtn: "Cancel",
+      negativeBtn: i18n.text(StrKey.cancel),
       onNegative: Navigator.of(context).pop,
     );
   }

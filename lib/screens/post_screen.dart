@@ -7,7 +7,9 @@ import 'package:discover/models/posts/post.dart';
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/like_button.dart';
 import 'package:discover/widgets/post/comment_row.dart';
 import 'package:discover/widgets/ui/custom_alert_dialog.dart';
@@ -110,7 +112,7 @@ class _PostScreenState extends State<PostScreen> {
     } else {
       showErrorDialog(
         context,
-        Exception("Cannot open Google Maps to show the route"),
+        Exception(i18n.text(StrKey.googleMapsError)),
       );
     }
   }
@@ -120,8 +122,8 @@ class _PostScreenState extends State<PostScreen> {
       context: context,
       builder: (dialogCtx) {
         return CustomAlertDialog(
-          title: "Delete post",
-          content: Text("Are you sure you want to delete this post ?"),
+          title: i18n.text(StrKey.deletePost),
+          content: Text(i18n.text(StrKey.confirmDeletePost)),
           onNegative: () => Navigator.of(context).pop(false),
           onPositive: () => Navigator.of(context).pop(true),
         );
@@ -179,7 +181,8 @@ class _PostScreenState extends State<PostScreen> {
     if (_fetchComments.hasError || !_fetchComments.hasData) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text(_fetchComments.error?.toString() ?? "No comments"),
+        child: Text(
+            _fetchComments.error?.toString() ?? i18n.text(StrKey.noComments)),
       );
     }
     return Column(
@@ -199,7 +202,7 @@ class _PostScreenState extends State<PostScreen> {
     if (!_fetch.hasData && _fetch.isLoading)
       return const Center(child: CircularProgressIndicator());
     if (_fetch.hasError) return Center(child: Text(_fetch.error.toString()));
-    if (!_fetch.hasData) return const Center(child: Text("Empty"));
+    if (!_fetch.hasData) return Center(child: Text(i18n.text(StrKey.empty)));
     final post = _fetch.data;
 
     return Column(
@@ -266,7 +269,8 @@ class _PostScreenState extends State<PostScreen> {
                             ],
                           ),
                           const SizedBox(height: 20.0),
-                          Text("Description", style: textTheme.caption),
+                          Text(i18n.text(StrKey.description),
+                              style: textTheme.caption),
                           const SizedBox(height: 8.0),
                           Text(post.content),
                         ]
@@ -274,7 +278,7 @@ class _PostScreenState extends State<PostScreen> {
                               ? [
                                   const SizedBox(height: 20.0),
                                   Text(
-                                    "Additional informations",
+                                    i18n.text(StrKey.addtionalInfo),
                                     style: textTheme.caption,
                                   ),
                                   const SizedBox(height: 8.0),
@@ -283,7 +287,8 @@ class _PostScreenState extends State<PostScreen> {
                               : [])
                           ..addAll([
                             const SizedBox(height: 20.0),
-                            Text("Tags", style: textTheme.caption),
+                            Text(i18n.text(StrKey.tags),
+                                style: textTheme.caption),
                             const SizedBox(height: 4.0),
                             Wrap(
                               spacing: 8.0,
@@ -301,7 +306,10 @@ class _PostScreenState extends State<PostScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                            child: Text("COMMENTS", style: textTheme.caption),
+                            child: Text(
+                              i18n.text(StrKey.comments).toUpperCase(),
+                              style: textTheme.caption,
+                            ),
                           ),
                           TextField(
                             controller: _commentController,
@@ -311,7 +319,7 @@ class _PostScreenState extends State<PostScreen> {
                             autofocus: widget.focusComment,
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
-                              hintText: 'Enter your comment',
+                              hintText: i18n.text(StrKey.enterYourComment),
                               filled: true,
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(16),
@@ -339,7 +347,7 @@ class _PostScreenState extends State<PostScreen> {
                       color: Colors.grey[200],
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        "Posted ${post.dateAgo}",
+                        i18n.text(StrKey.posted, {'dateAgo': post.dateAgo}),
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
@@ -365,7 +373,8 @@ class _PostScreenState extends State<PostScreen> {
                             child: Center(
                               child: _buildHeaderIcon(
                                 icon: Icons.mode_comment,
-                                text: "${post.comments} comments",
+                                text: i18n.text(
+                                    StrKey.comments, {'nbr': post.comments}),
                                 onTap: () {
                                   FocusScope.of(context)
                                       .requestFocus(_commentTextFocus);

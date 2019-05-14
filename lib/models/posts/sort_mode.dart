@@ -1,3 +1,6 @@
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
+
 class SortMode {
   final String value;
   const SortMode._(this.value);
@@ -18,10 +21,10 @@ class SortMode {
 
   @override
   String toString() {
-    if (this == DATE) return "date";
-    if (this == COMMENTS) return "comments";
-    if (this == LIKES) return "most liked";
-    return "distance";
+    if (this == DATE) return i18n.text(StrKey.sortDate);
+    if (this == COMMENTS) return i18n.text(StrKey.sortComments);
+    if (this == LIKES) return i18n.text(StrKey.sortLikes);
+    return i18n.text(StrKey.sortDistance);
   }
 
   @override

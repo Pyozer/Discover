@@ -5,7 +5,9 @@ import 'package:discover/screens/home_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
 import 'package:discover/utils/keys/asset_key.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/tab_indicator_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -138,8 +140,16 @@ class _LoginPageState extends State<LoginScreen>
         painter: TabIndicationPainter(pageController: _pageController),
         child: Row(
           children: [
-            _buildMenuButton("Login", () => _changePage(0), left),
-            _buildMenuButton("Register", () => _changePage(1), right),
+            _buildMenuButton(
+              i18n.text(StrKey.login),
+              () => _changePage(0),
+              left,
+            ),
+            _buildMenuButton(
+              i18n.text(StrKey.register),
+              () => _changePage(1),
+              right,
+            ),
           ],
         ),
       ),
@@ -219,7 +229,7 @@ class _LoginPageState extends State<LoginScreen>
                 children: [
                   _buildTextField(
                     icon: Icons.email,
-                    hint: "Email Address",
+                    hint: i18n.text(StrKey.emailAddress),
                     inputType: TextInputType.emailAddress,
                     nextFocus: _focusPwdLogin,
                     onSaved: (value) => _signInValues[Field.EMAIL] = value,
@@ -227,7 +237,7 @@ class _LoginPageState extends State<LoginScreen>
                   const Divider(height: 0),
                   _buildTextField(
                     icon: Icons.lock,
-                    hint: "Password",
+                    hint: i18n.text(StrKey.password),
                     focusNode: _focusPwdLogin,
                     onSaved: (value) => _signInValues[Field.PASSWORD] = value,
                     isPassword: true,
@@ -262,21 +272,21 @@ class _LoginPageState extends State<LoginScreen>
                 children: [
                   _buildTextField(
                     icon: Icons.person,
-                    hint: "First name",
+                    hint: i18n.text(StrKey.firstname),
                     nextFocus: _focusLastnameSignup,
                     onSaved: (value) => _signUpValues[Field.FIRSTNAME] = value,
                   ),
                   const Divider(height: 0),
                   _buildTextField(
                     icon: Icons.person,
-                    hint: "Last name",
+                    hint: i18n.text(StrKey.lastname),
                     nextFocus: _focusEmailSignup,
                     onSaved: (value) => _signUpValues[Field.LASTNAME] = value,
                   ),
                   const Divider(height: 0),
                   _buildTextField(
                     icon: Icons.email,
-                    hint: "Email Address",
+                    hint: i18n.text(StrKey.emailAddress),
                     inputType: TextInputType.emailAddress,
                     focusNode: _focusEmailSignup,
                     nextFocus: _focusPwdSignup,
@@ -285,7 +295,7 @@ class _LoginPageState extends State<LoginScreen>
                   const Divider(height: 0),
                   _buildTextField(
                     icon: Icons.lock,
-                    hint: "Password",
+                    hint: i18n.text(StrKey.password),
                     focusNode: _focusPwdSignup,
                     nextFocus: _focusPwdConfirmSignup,
                     onSaved: (value) => _signUpValues[Field.PASSWORD] = value,
@@ -294,7 +304,7 @@ class _LoginPageState extends State<LoginScreen>
                   const Divider(height: 0),
                   _buildTextField(
                     icon: Icons.lock,
-                    hint: "Confirmation",
+                    hint: i18n.text(StrKey.passwordConfirm),
                     focusNode: _focusPwdConfirmSignup,
                     onSaved: (value) => _signUpValues[Field.PWDCONFIRM] = value,
                     isPassword: true,
@@ -304,7 +314,10 @@ class _LoginPageState extends State<LoginScreen>
             ),
           ),
         ),
-        Positioned(top: 310.0, child: _buildBtn('Signup', _onSignUp)),
+        Positioned(
+          top: 310.0,
+          child: _buildBtn(i18n.text(StrKey.register), _onSignUp),
+        ),
       ],
     );
   }
@@ -324,9 +337,9 @@ class _LoginPageState extends State<LoginScreen>
     final pwd = _signInValues[Field.PASSWORD];
 
     if (email.isEmpty || pwd.isEmpty) {
-      return showErrorDialog(context, "You must fill all textfields");
+      return showErrorDialog(context, i18n.text(StrKey.textfieldRequired));
     } else if (!isEmail(email)) {
-      return showErrorDialog(context, "Email is wrong");
+      return showErrorDialog(context, i18n.text(StrKey.emailIsWrong));
     }
 
     try {
@@ -357,13 +370,13 @@ class _LoginPageState extends State<LoginScreen>
         pwdConfirm.isEmpty ||
         firstName.isEmpty ||
         lastName.isEmpty) {
-      return showErrorDialog(context, "You must fill all textfields");
+      return showErrorDialog(context, i18n.text(StrKey.textfieldRequired));
     } else if (!isEmail(email)) {
-      return showErrorDialog(context, "Email is wrong");
+      return showErrorDialog(context, i18n.text(StrKey.emailIsWrong));
     } else if (pwd != pwdConfirm) {
       return showErrorDialog(
         context,
-        "Password and confirmation are not identical",
+        i18n.text(StrKey.passwordConfirmWrong),
       );
     }
 

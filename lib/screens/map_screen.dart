@@ -4,7 +4,9 @@ import 'package:discover/models/posts/sort_mode.dart';
 import 'package:discover/screens/post_screen.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -50,7 +52,7 @@ class _MapScreenState extends State<MapScreen> with AfterLayoutMixin {
       position: LatLng(post.latitude, post.longitude),
       markerId: MarkerId("${post.id}"),
       infoWindow: InfoWindow(
-        title: "Post by ${post.author.userInfo}",
+        title: i18n.text(StrKey.postBy, {'user': post.author.userInfo}),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => PostScreen(postId: post.id),

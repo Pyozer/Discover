@@ -1,7 +1,9 @@
 import 'package:discover/screens/home_screen.dart';
 import 'package:discover/screens/login_screen.dart';
 import 'package:discover/utils/keys/asset_key.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -70,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 const CircularProgressIndicator(),
                 const SizedBox(height: 42.0),
-                Text('Getting your position...')
+                Text(i18n.text(StrKey.gettingPosition))
               ],
             ),
           ),

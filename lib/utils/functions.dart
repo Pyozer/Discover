@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -34,20 +36,34 @@ String getTimeAgo(DateTime time) {
   if (time == null) return "";
 
   final diff = DateTime.now().difference(time);
-  if (diff.inSeconds < 60) return "${diff.inSeconds} sec ago";
-  if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
+  if (diff.inSeconds < 60)
+    return i18n.text(StrKey.secAgo, {'sec': diff.inSeconds});
+  if (diff.inMinutes < 60)
+    return i18n.text(
+      diff.inMinutes > 1 ? StrKey.minsAgo : StrKey.minAgo,
+      {'min': diff.inMinutes},
+    );
 
   final hours = diff.inHours;
-  if (hours < 24) return "$hours hour${hours > 1 ? "s" : ""} ago";
+  if (hours < 24)
+    return i18n.text(
+      hours > 1 ? StrKey.hoursAgo : StrKey.hourAgo,
+      {'hour': hours},
+    );
 
   final days = diff.inDays;
-  if (days < 30) return "$days day${days > 1 ? "s" : ""} ago";
+  if (days < 30)
+    return i18n.text(days > 1 ? StrKey.daysAgo : StrKey.dayAgo, {'day': days});
 
   final mounths = diff.inDays / 30;
-  if (days < 365) return "$mounths mounth${mounths > 1 ? "s" : ""} ago";
+  if (days < 365)
+    return i18n.text(
+      mounths > 1 ? StrKey.monthsAgo : StrKey.monthAgo,
+      {'month': mounths},
+    );
 
   final years = diff.inDays ~/ 365;
-  return "$years year${years > 1 ? "s" : ""} ago";
+  return i18n.text(StrKey.yearAgo, {'year': years});
 }
 
 String getDistance(int distance) {
@@ -61,10 +77,10 @@ void showErrorDialog(BuildContext context, dynamic error) {
     context: context,
     builder: (dialogCtx) {
       return CustomAlertDialog(
-        title: "Error",
+        title: i18n.text(StrKey.error),
         content: Text(error.toString()),
         isNegative: false,
-        positiveBtn: "Ok",
+        positiveBtn: i18n.text(StrKey.ok),
         onPositive: () => Navigator.of(dialogCtx).pop(),
       );
     },

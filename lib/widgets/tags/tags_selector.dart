@@ -1,6 +1,8 @@
 import 'package:discover/models/tags/tag.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/tags/tags_dialog.dart';
 import 'package:discover/widgets/ui/btn_colored.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +52,8 @@ class _TagsSelectorState extends State<TagsSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text("Tags", style: Theme.of(context).textTheme.caption),
+        Text(i18n.text(StrKey.deleteComment),
+            style: Theme.of(context).textTheme.caption),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8.0,
@@ -82,7 +85,7 @@ class _TagsSelectorState extends State<TagsSelector> {
         Align(
           alignment: Alignment.bottomLeft,
           child: BtnColored(
-            text: "Select tags",
+            text: i18n.text(StrKey.selectTags),
             onPressed: _openTagDialog,
           ),
         ),

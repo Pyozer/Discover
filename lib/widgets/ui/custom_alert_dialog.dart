@@ -1,3 +1,5 @@
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/btn_colored.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
 import 'package:discover/widgets/ui/flat_btn_rounded.dart';
@@ -17,8 +19,8 @@ class CustomAlertDialog extends StatelessWidget {
     Key key,
     @required this.title,
     @required this.content,
-    this.positiveBtn = "Yes",
-    this.negativeBtn = "No",
+    this.positiveBtn,
+    this.negativeBtn,
     @required this.onPositive,
     this.onNegative,
     this.contentPadding = true,
@@ -30,11 +32,17 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> buttons = [
-      BtnColored(text: positiveBtn, onPressed: onPositive),
+      BtnColored(
+        text: positiveBtn ?? i18n.text(StrKey.yes),
+        onPressed: onPositive,
+      ),
     ];
     if (isNegative) {
       buttons.insertAll(0, [
-        FlatBtnRounded(text: negativeBtn, onPressed: onNegative),
+        FlatBtnRounded(
+          text: negativeBtn ?? i18n.text(StrKey.no),
+          onPressed: onNegative,
+        ),
         const SizedBox(width: 12.0),
       ]);
     }
@@ -48,10 +56,7 @@ class CustomAlertDialog extends StatelessWidget {
             child: Text(title, style: Theme.of(context).textTheme.title),
           ),
           contentPadding
-              ? Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: content,
-                )
+              ? Padding(padding: const EdgeInsets.all(16), child: content)
               : content,
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),

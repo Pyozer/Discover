@@ -1,5 +1,7 @@
 import 'package:discover/models/tags/tag.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/tags/tags_selector.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +32,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Filters")),
+      appBar: AppBar(title: Text(i18n.text(StrKey.filters))),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text("Apply"),
+        label: Text(i18n.text(StrKey.apply)),
         icon: const Icon(Icons.check),
         onPressed: () {
           final prefs = PreferencesProvider.of(context);
@@ -58,7 +60,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 16),
-                Text("Maximum distance: ${_distance.toInt()}km"),
+                Text(i18n.text(
+                  StrKey.maximumDistance,
+                  {'distance': "${_distance.toInt()}"},
+                )),
                 const SizedBox(height: 12),
                 Slider(
                   value: _distance,
@@ -66,7 +71,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   min: 1,
                   max: 300,
                   divisions: 30,
-                  label: "Distance ${_distance.toInt()}km",
+                  label: "${_distance.toInt()}km",
                 ),
               ],
             ),

@@ -1,5 +1,7 @@
 import 'package:discover/models/base_response.dart';
 import 'package:discover/models/custom_error.dart';
+import 'package:discover/utils/keys/string_key.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:http/http.dart' as http;
 
 abstract class BaseApi {
@@ -47,13 +49,13 @@ abstract class BaseApi {
     try {
       return await httpRequest;
     } catch (_) {
-      throw CustomError("Cannot connect to server, check your internet connection.");
+      throw CustomError(i18n.text(StrKey.cannotConnectServer));
     }
   }
 
   Map<String, dynamic> getWithBaseData(http.Response response) {
     if (response.statusCode == 404) {
-      throw CustomError("Unknown API Route");
+      throw CustomError(i18n.text(StrKey.unknownApiRoute));
     }
     CustomError error;
     try {
@@ -61,7 +63,7 @@ abstract class BaseApi {
       if (baseRes.error == null) return baseRes.data;
       error = baseRes.error;
     } catch (_) {}
-    throw error ?? CustomError("Unknown error");
+    throw error ?? CustomError(i18n.text(StrKey.unknownError));
   }
 
   String _encodeParams(Map<String, String> params) {

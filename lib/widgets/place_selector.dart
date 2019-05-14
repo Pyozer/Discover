@@ -1,5 +1,7 @@
 import 'package:discover/utils/keys/asset_key.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,7 +30,7 @@ class _PlaceSelectorState extends State<PlaceSelector> {
       _mapPosition = LatLng(userPos.latitude, userPos.longitude);
 
     return CustomAlertDialog(
-      title: "Choose your position",
+      title: i18n.text(StrKey.choosePosition),
       content: Stack(
         children: [
           Container(
@@ -56,14 +58,14 @@ class _PlaceSelectorState extends State<PlaceSelector> {
         ],
       ),
       contentPadding: false,
-      positiveBtn: "Submit",
+      positiveBtn: i18n.text(StrKey.submit),
       onPositive: () {
         widget.onDone(Position(
           latitude: _mapPosition.latitude,
           longitude: _mapPosition.longitude,
         ));
       },
-      negativeBtn: "Cancel",
+      negativeBtn: i18n.text(StrKey.cancel),
       onNegative: () => widget.onDone(null),
     );
   }

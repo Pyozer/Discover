@@ -1,7 +1,9 @@
 import 'package:discover/models/comments/comment.dart';
 import 'package:discover/utils/api/api.dart';
 import 'package:discover/utils/functions.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:discover/widgets/ui/custom_alert_dialog.dart';
 import 'package:discover/widgets/user/user_image.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,8 @@ class CommentRow extends StatelessWidget {
       context: context,
       builder: (dialogCtx) {
         return CustomAlertDialog(
-          title: "Delete comment",
-          content: Text("Are you sure you want to delete this comment ?"),
+          title: i18n.text(StrKey.deleteComment),
+          content: Text(i18n.text(StrKey.deleteComment)),
           onNegative: () => Navigator.of(context).pop(false),
           onPositive: () => Navigator.of(context).pop(true),
         );

@@ -1,5 +1,7 @@
 import 'package:discover/utils/api/api.dart';
+import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
+import 'package:discover/utils/translations.dart';
 import 'package:flutter/material.dart';
 
 class LikeButton extends StatefulWidget {
@@ -55,8 +57,7 @@ class _LikeButtonState extends State<LikeButton> {
   Widget build(BuildContext context) {
     String text = '';
     if (!widget.isSmall) {
-      text = " LIKE";
-      if (_likesCount > 1) text += 'S';
+      text = i18n.text(_likesCount < 2 ? StrKey.like : StrKey.likes);
     }
 
     List<Widget> _elements = [
