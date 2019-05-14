@@ -34,6 +34,8 @@ class RoundedImage extends StatelessWidget {
               )
             : CachedNetworkImage(
                 imageUrl: imageUrl,
+                width: size.width,
+                height: size.height,
                 placeholder: (_, __) =>
                     const Center(child: CircularProgressIndicator()),
                 errorWidget: (_, __, ___) =>

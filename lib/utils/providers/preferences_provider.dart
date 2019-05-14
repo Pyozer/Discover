@@ -66,7 +66,7 @@ class PreferencesProviderState extends State<PreferencesProvider> {
 
   void setUser(User user, [bool state = false]) {
     _setPref(() => _user = user, state);
-    widget.prefs.setString(PrefKey.user, user.toRawJson());
+    widget.prefs.setString(PrefKey.user, user?.toRawJson());
   }
 
   SortMode getSortMode() => _sortMode;

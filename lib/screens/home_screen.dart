@@ -189,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen>
               title: Text(i18n.text(StrKey.logout)),
               leading: Icon(Icons.exit_to_app),
               onTap: () {
+                PreferencesProvider.of(context).setUser(null);
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => LoginScreen()),
                   (_) => true,
