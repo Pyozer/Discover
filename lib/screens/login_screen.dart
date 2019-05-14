@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginScreen>
         ),
         Positioned(
           top: 130.0,
-          child: _buildBtn('Login', _isLoginLoading ? null : _onSignIn),
+          child: _buildBtn(i18n.text(StrKey.login), _isLoginLoading ? null : _onSignIn),
         ),
       ],
     );

@@ -19,7 +19,7 @@ abstract class BaseApi {
 
   Future<Map<String, String>> header([String token]) async {
     Map<String, String> header = {
-      'Accept-Language': 'en',
+      'Accept-Language': i18n.currentLanguage,
       'Content-Type': 'application/json',
     };
     if (token != null) header['Authorization'] = token;
