@@ -12,6 +12,14 @@ class PostRow extends StatelessWidget {
 
   const PostRow({Key key, this.post}) : super(key: key);
 
+  void _openSite(BuildContext context, [bool focusComment = false]) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PostScreen(postId: post.id, focusComment: focusComment),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -49,13 +57,7 @@ class PostRow extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => PostScreen(postId: post.id),
-                ),
-              );
-            },
+            onTap: () => _openSite(context),
             child: Hero(
               tag: post.id,
               child: CachedNetworkImage(
@@ -96,7 +98,7 @@ class PostRow extends StatelessWidget {
                           Icons.mode_comment,
                           color: Colors.grey[800],
                         ),
-                        onTap: () {},
+                        onTap: () => _openSite(context, true),
                       ),
                       const SizedBox(width: 10.0),
                       Text(post.comments.toString())

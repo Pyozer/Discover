@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discover/models/comments/comment.dart';
 import 'package:discover/models/comments/request/comment_payload.dart';
@@ -18,8 +19,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PostScreen extends StatefulWidget {
   final int postId;
+  final bool focusComment;
 
-  PostScreen({Key key, this.postId}) : super(key: key);
+  PostScreen({Key key, @required this.postId, this.focusComment = false})
+      : super(key: key);
 
   _PostScreenState createState() => _PostScreenState();
 }
@@ -305,6 +308,7 @@ class _PostScreenState extends State<PostScreen> {
                             focusNode: _commentTextFocus,
                             minLines: 1,
                             maxLines: 5,
+                            autofocus: widget.focusComment,
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
                               hintText: 'Enter your comment',
