@@ -101,6 +101,7 @@ class MainPostListState extends State<MainPostList> with AfterLayoutMixin {
       child: ListView.builder(
         controller: _controller,
         itemCount: _fetch.data.posts.length,
+        cacheExtent: 6000,
         itemBuilder: (context, i) => PostRow(post: _fetch.data.posts[i]),
       ),
     );

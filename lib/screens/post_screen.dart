@@ -1,4 +1,3 @@
-import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discover/models/comments/comment.dart';
 import 'package:discover/models/comments/request/comment_payload.dart';

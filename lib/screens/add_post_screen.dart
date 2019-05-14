@@ -10,12 +10,14 @@ import 'package:discover/utils/keys/asset_key.dart';
 import 'package:discover/utils/keys/string_key.dart';
 import 'package:discover/utils/providers/preferences_provider.dart';
 import 'package:discover/utils/translations.dart';
+import 'package:discover/widgets/place_selector.dart';
 import 'package:discover/widgets/tags/tags_selector.dart';
 import 'package:discover/widgets/ui/custom_card.dart';
 import 'package:discover/widgets/ui/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart' as Geolocator;
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_amazon_s3/flutter_amazon_s3.dart';
 import 'package:uuid/uuid.dart';
@@ -35,6 +37,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Position _positionType = Position.GPS;
   List<Tag> _selectedTags = [];
   bool _isLoading = false;
+  Geolocator.Position _postPos;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currUserPos = PreferencesProvider.of(context).getUserPos();
+    _postPos ??= Geolocator.Position(
+      latitude: currUserPos.latitude,
+      longitude: currUserPos.longitude,
+    );
+  }
 
   Future<String> _uploadImage() async {
     String uploadedImageUrl = await FlutterAmazonS3.uploadImage(
@@ -186,8 +199,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      Text(i18n.text(StrKey.additionalInfo),
-                          style: textTheme.caption),
+                      Text(
+                        i18n.text(StrKey.additionalInfo),
+                        style: textTheme.caption,
+                      ),
                       TextField(
                         maxLines: 6,
                         minLines: 2,
@@ -222,8 +237,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         ),
                         value: Position.CUSTOM,
                         groupValue: _positionType,
-                        onChanged: (checked) {
-                          setState(() => _positionType = Position.CUSTOM);
+                        onChanged: (checked) async {
+                          final userPos = await showDialog(
+                            context: context,
+                            builder: (dialogCtx) {
+                              return PlaceSelector(
+                                onDone: Navigator.of(dialogCtx).pop,
+                              );
+                            },
+                          );
+                          if (userPos != null) {
+                            _postPos = userPos;
+                            setState(() => _positionType = Position.CUSTOM);
+                          } else {
+                            _postPos =
+                                PreferencesProvider.of(context).getUserPos();
+                            setState(() => _positionType = Position.GPS);
+                          }
                         },
                       ),
                       RadioListTile<Position>(
@@ -234,6 +264,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         value: Position.GPS,
                         groupValue: _positionType,
                         onChanged: (checked) {
+                          _postPos =
+                              PreferencesProvider.of(context).getUserPos();
                           setState(() => _positionType = Position.GPS);
                         },
                       ),
