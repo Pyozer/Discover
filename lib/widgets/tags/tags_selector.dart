@@ -52,8 +52,10 @@ class _TagsSelectorState extends State<TagsSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(i18n.text(StrKey.deleteComment),
-            style: Theme.of(context).textTheme.caption),
+        Text(
+          i18n.text(StrKey.tags),
+          style: Theme.of(context).textTheme.caption,
+        ),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8.0,

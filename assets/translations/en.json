@@ -50,8 +50,8 @@
     "comments": "Comments",
     "nbr_comments": "{nbr} comments",
     "enter_your_comment": "Enter your comment",
-    "like": "like",
-    "likes": "likes",
+    "like": " LIKE",
+    "likes": " LIKES",
     "posted": "Posted {dateAgo}",
     "cannot_connect_server": "Cannot connect to the server, please check your internet connection.",
     "unknown_api_route": "Unknown API route",
@@ -77,8 +77,8 @@
     "days_ago": "{day} days ago",
     "month_ago": "{month} month ago",
     "months_ago": "{month} months ago",
-    "year_ago": "{sec} year ago",
-    "years_ago": "{sec} years ago",
+    "year_ago": "{year} year ago",
+    "years_ago": "{year} years ago",
     "login": "Login",
     "register": "Register"
 }

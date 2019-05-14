@@ -66,7 +66,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       return showErrorDialog(context, i18n.text(StrKey.errorEmptyImage));
     }
     if (_description.trim().isEmpty) {
-      return showErrorDialog(context, i18n.text(StrKey.description));
+      return showErrorDialog(context, i18n.text(StrKey.errorEmptyDescription));
     }
     if (_selectedTags.length < 1) {
       return showErrorDialog(context, i18n.text(StrKey.errorMinimumOneTag));
