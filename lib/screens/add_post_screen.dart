@@ -186,7 +186,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      Text(i18n.text(StrKey.addtionalInfo),
+                      Text(i18n.text(StrKey.additionalInfo),
                           style: textTheme.caption),
                       TextField(
                         maxLines: 6,

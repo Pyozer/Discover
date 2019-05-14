@@ -278,7 +278,7 @@ class _PostScreenState extends State<PostScreen> {
                               ? [
                                   const SizedBox(height: 20.0),
                                   Text(
-                                    i18n.text(StrKey.addtionalInfo),
+                                    i18n.text(StrKey.additionalInfo),
                                     style: textTheme.caption,
                                   ),
                                   const SizedBox(height: 8.0),
